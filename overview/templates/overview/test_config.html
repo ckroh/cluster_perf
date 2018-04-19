@@ -1,0 +1,54 @@
+{% extends "overview/base.html" %}
+{% block title %}Test Config '{{ config.name }}' -  Cluster Perf{% endblock %}
+
+{% block home %}current{% endblock %}
+
+
+{% block real_content %}
+	
+<div id="content">
+	Test '{{ config.test.name }}' Config '{{ config.name }}':
+	
+    
+    <details>
+	<summary>Configuration:</summary>
+	<div style="border:1px solid #000; padding:10px;">
+		 {{config.config|linebreaks}}
+	</div>
+    </details>
+     <details>
+	<summary>Parameter:</summary>
+	<div style="border:1px solid #000; padding:10px;">
+		 {{config.parameter|linebreaks}}
+	</div>
+    </details>
+    
+    <section>
+    Configfile extension: {{config.configfile_ending}}
+    </section>
+    <section>
+    Configfile neccessary: {{config.needs_configfile}}
+    </section>
+    
+    <details>
+	<summary>Version history:</summary>
+	<table>
+		<tr><th>Hash</th><th>Date</th><th>Config Diff</th><th>Parameter Diff</th><th>Was built</th></tr>
+		 {% for t in testconfigversions %}
+		    <tr><td>{{ t.hash }}</td><td>{{ t.edited }}</td><td><details>{{ t.config_diff|linebreaks }}</details></td><td>{{ t.parameter_diff|linebreaks }}</td></tr>
+		{% endfor %}
+	</table>
+    </details>
+    
+    
+    <section>
+    <h1>Run Test</h1>
+    <form action="/run-test/" method="post">
+    {% csrf_token %}
+    {{ runform }}
+    <input type="submit" value="Submit" />
+</form>
+</section>
+
+    </div>
+{% endblock %}

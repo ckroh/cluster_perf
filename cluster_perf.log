@@ -1,0 +1,98 @@
+2018-04-19 14:01:53,089 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:01:53,097 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:01:53,104 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:01:54,129 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 14:01:54,136 - DEBUG: starting thread (client mode): 0x14506908
+2018-04-19 14:01:54,137 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 14:01:54,149 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 14:01:54,149 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 14:01:54,151 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 14:01:54,151 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 14:01:54,151 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 14:01:54,151 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 14:01:54,152 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 14:01:54,152 - DEBUG: Compression agreed: none
+2018-04-19 14:01:54,155 - DEBUG: Got server p (2048 bits)
+2018-04-19 14:01:54,346 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 14:01:54,347 - DEBUG: Switch to new keys ...
+2018-04-19 14:01:54,348 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 14:01:54,349 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 14:01:54,388 - DEBUG: userauth is OK
+2018-04-19 14:01:54,427 - INFO: Authentication (publickey) successful!
+2018-04-19 14:01:54,427 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 14:01:54,467 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:01:54,473 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:01:54,481 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:02:54,496 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:02:54,497 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:03:54,559 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:03:54,559 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:04:54,621 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:04:54,621 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:05:54,684 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:05:54,684 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:06:54,746 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:06:54,746 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:06:58,650 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.d via ssh
+2018-04-19 14:06:58,669 - ERROR: cp_ssh: Could not connect to host taurus.hrsk.tu-dresden.d
+2018-04-19 14:06:58,703 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:06:58,710 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:06:58,717 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:07:43,914 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.d via ssh
+2018-04-19 14:07:43,916 - ERROR: cp_ssh: Could not connect to host taurus.hrsk.tu-dresden.d
+2018-04-19 14:07:43,975 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:07:43,981 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:07:43,989 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:14:15,810 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:14:15,813 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:14:15,821 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:14:17,769 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:14:17,772 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:14:17,780 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:14:18,437 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.d via ssh
+2018-04-19 14:14:18,440 - ERROR: cp_ssh: Could not connect to host taurus.hrsk.tu-dresden.d
+2018-04-19 14:14:18,476 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:14:18,482 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:14:18,489 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:14:32,169 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.d via ssh
+2018-04-19 14:14:32,171 - ERROR: cp_ssh: Could not connect to host taurus.hrsk.tu-dresden.d
+2018-04-19 14:14:32,207 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:14:32,210 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:14:32,217 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:14:47,861 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.d via ssh
+2018-04-19 14:14:47,863 - ERROR: cp_ssh: Could not connect to host taurus.hrsk.tu-dresden.d
+2018-04-19 14:14:47,915 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:14:47,921 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:14:47,929 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:15:01,247 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 14:15:01,250 - DEBUG: starting thread (client mode): 0x81e0f940
+2018-04-19 14:15:01,250 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 14:15:01,262 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 14:15:01,262 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 14:15:01,264 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 14:15:01,264 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 14:15:01,264 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 14:15:01,264 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 14:15:01,265 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 14:15:01,265 - DEBUG: Compression agreed: none
+2018-04-19 14:15:01,268 - DEBUG: Got server p (2048 bits)
+2018-04-19 14:15:01,469 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 14:15:01,470 - DEBUG: Switch to new keys ...
+2018-04-19 14:15:01,471 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 14:15:01,472 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 14:15:01,510 - DEBUG: userauth is OK
+2018-04-19 14:15:01,545 - INFO: Authentication (publickey) successful!
+2018-04-19 14:15:01,546 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 14:15:01,578 - WARNING: Not Found: /media/css/base.css
+2018-04-19 14:15:01,591 - WARNING: Not Found: /media/css/login.css
+2018-04-19 14:15:01,602 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 14:16:01,614 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:16:01,615 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:17:01,677 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:17:01,678 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:18:01,740 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:18:01,741 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:19:01,803 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:19:01,803 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 14:20:01,865 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 14:20:01,866 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.

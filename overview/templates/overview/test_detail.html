@@ -1,0 +1,20 @@
+{% extends "overview/base.html" %}
+{% block title %}Tests -  Cluster Perf{% endblock %}
+
+{% block home %}current{% endblock %}
+
+
+{% block real_content %}
+	
+<div id="content">
+	Test '{{ test.name }}':
+	Configs:
+    <table>
+    <tr><th>Name</th></tr>
+    {% for t in testconfigs %}
+        <tr><td><a href="{% url 'test_config' test.id t.id %}">{{ t.name }}</a></td></tr>
+    {% endfor %}
+    </table>
+    
+    </div>
+{% endblock %}

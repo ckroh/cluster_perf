@@ -1,0 +1,73 @@
+	{% extends "overview/base.html" %}
+{% block title %}Tests -  Cluster Perf{% endblock %}
+
+{% block home %}current{% endblock %}
+
+
+{% block real_content %}
+
+Cluster:
+    <table>
+    <tr><th>Name</th><th>Batchsystem</th><th>Login-Node</th><th># Nodes</th></tr>
+    
+        <tr><td><a href="{% url 'cluster_detail' cluster.id %}">{{ cluster.name }}</a></td><td>{{ cluster.batchsystem }}</td><td>{{ cluster.login_node }}</td><td>0</td></tr>
+
+    </table>
+<hr/>
+<section>
+    <h1>Test Cluster Connection Settings</h1>
+    <form action="{% url 'cluster_detail' cluster.id %}" method="post">
+    {% csrf_token %}
+    {{ testform }}
+    <input type="submit" value="Submit" />
+</form>
+</section>
+
+<hr/>
+{% if partitions %}
+ <details>
+	<summary>
+   	Partitions:
+   	</summary>
+    <table>
+    <tr><th>Name</th><th>Description</th></tr>
+    {% for n in partitions %}
+        <tr>
+        	<td>{{ n.name }}</td>
+        	<td>{{ n.description }}</td>
+    	</tr>
+    {% endfor %}
+    </table>
+    </details>
+<hr/>
+{%endif %}
+  
+   <details>
+	<summary>
+   	Node Types:
+   	</summary>
+    <table>
+    <tr><th>Name</th><th>Partition</th><th>HW Info</th></tr>
+    {% for n in node_types %}
+        <tr>
+        	<td><a href="{% url 'node_type_detail' n.cluster.id n.id %}">{{ n.name }}</a></td>
+        	<td>{% if n.partition.id %}<a href="{% url 'partition_detail' n.cluster.id n.partition.id %}">{{ n.partition.name }}</a>{%endif %}</td>
+        	<td><details>{{ n.hw_info }}</details></td>
+    	</tr>
+    {% endfor %}
+    </table>
+    </details>
+
+<hr/>
+   <details>
+	<summary>
+   	All Nodes:
+   	</summary>
+    <table>
+    <tr><th>Name</th><th>Node Type</th><th>Login-Node</th><th># Nodes</th></tr>
+    {% for n in nodes %}
+        <tr><td><a href="{% url 'node_detail' n.cluster_id n.id %}">{{ n.name }}</a></td><td>{{ n.node_type.name }}</td><td></td><td>0</td></tr>
+    {% endfor %}
+    </table>
+    </details>
+{% endblock %}

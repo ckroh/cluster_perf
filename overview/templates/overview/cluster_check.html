@@ -1,0 +1,23 @@
+{% extends "overview/base.html" %}
+{% block title %}Tests -  Cluster Perf{% endblock %}
+
+{% block home %}current{% endblock %}
+
+
+{% block real_content %}
+	Cluster: {{ cluster }}
+    <table>
+    <tr><th>Name</th><th>Batchsystem</th><th>Login-Node</th><th># Nodes</th></tr>
+    
+<!--        <tr><td><a href="{% url 'cluster_detail' cluster.id %}">{{ cluster.name }}</a></td><td>{{ cluster.batchsystem }}</td><td>{{ cluster.login_node }}</td><td>0</td></tr>-->
+
+    </table>
+<hr/>
+<section>
+    <h1>Test Cluster Connection Settings</h1>
+   <table>
+   <tr><th>SSH Connection</th><td>{{ ssh_status }}</td><td>{{ ssh_output }}</td></tr>
+   </table>
+</section>
+
+{% endblock %}
