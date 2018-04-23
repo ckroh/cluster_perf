@@ -96,3 +96,442 @@
 2018-04-19 14:19:01,803 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
 2018-04-19 14:20:01,865 - DEBUG: Received global request "keepalive@openssh.com"
 2018-04-19 14:20:01,866 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 15:02:16,366 - WARNING: Not Found: /media/css/login.css
+2018-04-19 15:02:16,371 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 15:02:17,629 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:02:17,644 - DEBUG: starting thread (client mode): 0x3816b4e0
+2018-04-19 15:02:17,644 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:02:17,650 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:02:17,650 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:02:17,653 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:02:17,654 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:02:17,654 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:02:17,654 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:02:17,654 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:02:17,654 - DEBUG: Compression agreed: none
+2018-04-19 15:02:17,696 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:02:17,985 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:02:17,986 - DEBUG: Switch to new keys ...
+2018-04-19 15:02:17,987 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:02:17,988 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:02:18,027 - DEBUG: userauth is OK
+2018-04-19 15:02:18,069 - INFO: Authentication (publickey) successful!
+2018-04-19 15:02:18,069 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:02:18,070 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:02:18,077 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:02:18,077 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:02:18,083 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:02:18,095 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:02:18,095 - DEBUG: [chan 0] EOF sent (0)
+2018-04-19 15:02:18,128 - WARNING: Not Found: /media/css/base.css
+2018-04-19 15:02:18,134 - WARNING: Not Found: /media/css/login.css
+2018-04-19 15:02:18,142 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 15:03:08,290 - WARNING: Not Found: /media/css/login.css
+2018-04-19 15:03:08,305 - WARNING: Not Found: /media/css/base.css
+2018-04-19 15:03:08,302 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 15:03:10,743 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:03:10,746 - DEBUG: starting thread (client mode): 0x8da92ba8
+2018-04-19 15:03:10,746 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:03:10,758 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:03:10,759 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:03:10,760 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:03:10,760 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:03:10,761 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:03:10,761 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:03:10,761 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:03:10,761 - DEBUG: Compression agreed: none
+2018-04-19 15:03:10,802 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:03:10,997 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:03:10,998 - DEBUG: Switch to new keys ...
+2018-04-19 15:03:10,999 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:03:11,000 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:03:11,038 - DEBUG: userauth is OK
+2018-04-19 15:03:11,072 - INFO: Authentication (publickey) successful!
+2018-04-19 15:03:11,073 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:03:11,074 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:03:11,081 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:03:11,081 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:03:11,084 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:03:11,091 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:03:11,093 - DEBUG: [chan 0] EOF sent (0)
+2018-04-19 15:03:11,093 - ERROR: Internal Server Error: /overview/cluster/35
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cluster_perf_web/overview/views.py", line 44, in cluster_detail
+    return render(request,'overview/cluster_check.html',{'cluster': cluster, 'ssh_status': ssh_status, 'remote_path_status': remote_path_status, 'local_path_status': local_path_status})
+UnboundLocalError: local variable 'remote_path_status' referenced before assignment
+2018-04-19 15:03:56,881 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:03:56,888 - DEBUG: starting thread (client mode): 0x3008ae48
+2018-04-19 15:03:56,888 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:03:56,914 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:03:56,915 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:03:56,917 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:03:56,917 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:03:56,917 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:03:56,917 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:03:56,918 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:03:56,918 - DEBUG: Compression agreed: none
+2018-04-19 15:03:56,961 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:03:57,150 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:03:57,151 - DEBUG: Switch to new keys ...
+2018-04-19 15:03:57,153 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:03:57,154 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:03:57,192 - DEBUG: userauth is OK
+2018-04-19 15:03:57,224 - INFO: Authentication (publickey) successful!
+2018-04-19 15:03:57,224 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:03:57,225 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:03:57,231 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:03:57,231 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:03:57,233 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:03:57,245 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:03:57,246 - DEBUG: [chan 0] EOF sent (0)
+2018-04-19 15:03:57,246 - ERROR: Internal Server Error: /overview/cluster/35
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cluster_perf_web/overview/views.py", line 44, in cluster_detail
+    return render(request,'overview/cluster_check.html',{'cluster': cluster, 'ssh_status': ssh_status, 'remote_path_status': remote_path_status, 'local_path_status': local_path_status})
+UnboundLocalError: local variable 'remote_path_status' referenced before assignment
+2018-04-19 15:04:57,351 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 15:04:57,352 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 15:05:57,414 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 15:05:57,414 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 15:06:57,476 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 15:06:57,477 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 15:07:29,788 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:07:29,792 - DEBUG: starting thread (client mode): 0x14be9dd8
+2018-04-19 15:07:29,793 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:07:29,820 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:07:29,821 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:07:29,822 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:07:29,823 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:07:29,823 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:07:29,823 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:07:29,823 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:07:29,823 - DEBUG: Compression agreed: none
+2018-04-19 15:07:29,863 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:07:30,049 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:07:30,050 - DEBUG: Switch to new keys ...
+2018-04-19 15:07:30,052 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:07:30,053 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:07:30,091 - DEBUG: userauth is OK
+2018-04-19 15:07:30,126 - INFO: Authentication (publickey) successful!
+2018-04-19 15:07:30,127 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:07:30,128 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:07:30,132 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:07:30,132 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:07:30,135 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:07:30,142 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:07:30,143 - DEBUG: [chan 0] EOF sent (0)
+2018-04-19 15:07:30,144 - ERROR: Internal Server Error: /overview/cluster/35
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cluster_perf_web/overview/views.py", line 47, in cluster_detail
+    return render(request,'overview/cluster_check.html',{'cluster': cluster, 'ssh_status': ssh_status, 'remote_path_status': remote_path_status, 'local_path_status': local_path_status})
+UnboundLocalError: local variable 'remote_path_status' referenced before assignment
+2018-04-19 15:07:32,469 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:07:32,472 - DEBUG: starting thread (client mode): 0xe8436a0
+2018-04-19 15:07:32,472 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:07:32,484 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:07:32,485 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:07:32,486 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:07:32,487 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:07:32,487 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:07:32,487 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:07:32,487 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:07:32,488 - DEBUG: Compression agreed: none
+2018-04-19 15:07:32,526 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:07:32,654 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:07:32,655 - DEBUG: Switch to new keys ...
+2018-04-19 15:07:32,656 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:07:32,657 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:07:32,695 - DEBUG: userauth is OK
+2018-04-19 15:07:32,715 - INFO: Authentication (publickey) successful!
+2018-04-19 15:07:32,716 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:07:32,716 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:07:32,724 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:07:32,724 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:07:32,727 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:07:32,733 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:07:32,733 - ERROR: Internal Server Error: /overview/cluster/35
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cluster_perf_web/overview/views.py", line 47, in cluster_detail
+    return render(request,'overview/cluster_check.html',{'cluster': cluster, 'ssh_status': ssh_status, 'remote_path_status': remote_path_status, 'local_path_status': local_path_status})
+UnboundLocalError: local variable 'remote_path_status' referenced before assignment
+2018-04-19 15:07:32,745 - DEBUG: [chan 0] EOF sent (0)
+2018-04-19 15:08:07,672 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:08:07,677 - DEBUG: starting thread (client mode): 0xb9fe1dd8
+2018-04-19 15:08:07,678 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:08:07,706 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:08:07,706 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:08:07,708 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:08:07,708 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:08:07,708 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:08:07,708 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:08:07,708 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:08:07,709 - DEBUG: Compression agreed: none
+2018-04-19 15:08:07,710 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:08:07,895 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:08:07,896 - DEBUG: Switch to new keys ...
+2018-04-19 15:08:07,898 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:08:07,899 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:08:07,936 - DEBUG: userauth is OK
+2018-04-19 15:08:07,971 - INFO: Authentication (publickey) successful!
+2018-04-19 15:08:07,972 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:08:07,973 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:08:07,978 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:08:07,978 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:08:07,981 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:08:07,987 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:08:07,988 - DEBUG: [chan 0] EOF sent (0)
+2018-04-19 15:08:07,989 - ERROR: Internal Server Error: /overview/cluster/35
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cluster_perf_web/overview/views.py", line 48, in cluster_detail
+    return render(request,'overview/cluster_check.html',{'cluster': cluster, 'ssh_status': ssh_status, 'remote_path_status': remote_path_status, 'local_path_status': local_path_status})
+UnboundLocalError: local variable 'remote_path_status' referenced before assignment
+2018-04-19 15:09:08,102 - DEBUG: Received global request "keepalive@openssh.com"
+2018-04-19 15:09:08,103 - DEBUG: Rejecting "keepalive@openssh.com" global request from server.
+2018-04-19 15:09:50,551 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:09:50,554 - DEBUG: starting thread (client mode): 0xd4814cc0
+2018-04-19 15:09:50,555 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:09:50,574 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:09:50,575 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:09:50,576 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:09:50,577 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:09:50,577 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:09:50,577 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:09:50,577 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:09:50,577 - DEBUG: Compression agreed: none
+2018-04-19 15:09:50,618 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:09:50,821 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:09:50,821 - DEBUG: Switch to new keys ...
+2018-04-19 15:09:50,822 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:09:50,823 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:09:50,862 - DEBUG: userauth is OK
+2018-04-19 15:09:50,917 - INFO: Authentication (publickey) successful!
+2018-04-19 15:09:50,917 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:09:50,919 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:09:50,925 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:09:50,926 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:09:50,930 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:09:50,936 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:09:50,936 - INFO: cp_ssh: Disconnect from host 
+2018-04-19 15:09:51,106 - WARNING: Not Found: /media/css/base.css
+2018-04-19 15:09:51,113 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 15:09:51,117 - WARNING: Not Found: /media/css/login.css
+2018-04-19 15:12:50,562 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-19 15:12:50,564 - DEBUG: starting thread (client mode): 0xd4260ba8
+2018-04-19 15:12:50,565 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-19 15:12:50,592 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-19 15:12:50,592 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-19 15:12:50,594 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-19 15:12:50,594 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-19 15:12:50,594 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-19 15:12:50,595 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-19 15:12:50,595 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-19 15:12:50,595 - DEBUG: Compression agreed: none
+2018-04-19 15:12:50,635 - DEBUG: Got server p (2048 bits)
+2018-04-19 15:12:50,769 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-19 15:12:50,770 - DEBUG: Switch to new keys ...
+2018-04-19 15:12:50,771 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-19 15:12:50,772 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-19 15:12:50,810 - DEBUG: userauth is OK
+2018-04-19 15:12:50,856 - INFO: Authentication (publickey) successful!
+2018-04-19 15:12:50,857 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-19 15:12:50,857 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-19 15:12:50,865 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-19 15:12:50,866 - DEBUG: Secsh channel 0 opened.
+2018-04-19 15:12:50,869 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-19 15:12:50,875 - DEBUG: [chan 0] EOF received (0)
+2018-04-19 15:12:50,876 - INFO: cp_ssh: Disconnect from host 
+2018-04-19 15:12:50,914 - WARNING: Not Found: /media/css/base.css
+2018-04-19 15:12:50,921 - WARNING: Not Found: /media/css/login.css
+2018-04-19 15:12:50,927 - WARNING: Not Found: /site_media/css/style.css
+2018-04-19 15:12:54,958 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:49:39,540 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:49:39,545 - WARNING: Not Found: /media/css/login.css
+2018-04-20 12:49:39,550 - WARNING: Not Found: /site_media/css/style.css
+2018-04-20 12:49:39,648 - WARNING: Not Found: /favicon.ico
+2018-04-20 12:49:42,378 - WARNING: Not Found: /media/css/login.css
+2018-04-20 12:49:42,381 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:49:42,389 - WARNING: Not Found: /site_media/css/style.css
+2018-04-20 12:49:44,654 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:49:44,659 - WARNING: Not Found: /media/css/login.css
+2018-04-20 12:49:44,665 - WARNING: Not Found: /site_media/css/style.css
+2018-04-20 12:49:46,060 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-20 12:49:46,075 - DEBUG: starting thread (client mode): 0xe80abef0
+2018-04-20 12:49:46,075 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-20 12:49:46,103 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-20 12:49:46,104 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-20 12:49:46,105 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-20 12:49:46,106 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-20 12:49:46,106 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-20 12:49:46,106 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-20 12:49:46,106 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-20 12:49:46,106 - DEBUG: Compression agreed: none
+2018-04-20 12:49:46,147 - DEBUG: Got server p (2048 bits)
+2018-04-20 12:49:46,488 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-20 12:49:46,489 - DEBUG: Switch to new keys ...
+2018-04-20 12:49:46,490 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-20 12:49:46,492 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-20 12:49:46,530 - DEBUG: userauth is OK
+2018-04-20 12:49:46,808 - INFO: Authentication (publickey) successful!
+2018-04-20 12:49:46,808 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-20 12:49:46,809 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-20 12:49:46,817 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-20 12:49:46,817 - DEBUG: Secsh channel 0 opened.
+2018-04-20 12:49:46,820 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-20 12:49:46,844 - DEBUG: [chan 0] EOF received (0)
+2018-04-20 12:49:46,845 - DEBUG: [chan 0] EOF sent (0)
+2018-04-20 12:49:46,846 - INFO: cp_ssh: Disconnect from host 
+2018-04-20 12:49:46,946 - DEBUG: EOF in transport thread
+2018-04-20 12:49:47,001 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:49:47,009 - WARNING: Not Found: /media/css/login.css
+2018-04-20 12:49:47,015 - WARNING: Not Found: /site_media/css/style.css
+2018-04-20 12:49:54,192 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:49:54,216 - WARNING: Not Found: /media/css/login.css
+2018-04-20 12:49:54,222 - WARNING: Not Found: /site_media/css/style.css
+2018-04-20 12:51:36,358 - WARNING: Not Found: /media/css/login.css
+2018-04-20 12:51:36,362 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:51:36,366 - WARNING: Not Found: /site_media/css/style.css
+2018-04-20 12:51:38,405 - WARNING: Not Found: /media/css/base.css
+2018-04-20 12:51:38,411 - WARNING: Not Found: /media/css/login.css
+2018-04-20 12:51:38,418 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:30:56,187 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:30:56,194 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:30:56,197 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:30:56,280 - WARNING: Not Found: /favicon.ico
+2018-04-23 12:30:59,042 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:30:59,050 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:30:59,061 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:31:01,454 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:31:01,460 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:31:01,466 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:31:02,902 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-23 12:31:02,905 - DEBUG: starting thread (client mode): 0xa9d4b6a0
+2018-04-23 12:31:02,906 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-23 12:31:02,934 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-23 12:31:02,935 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-23 12:31:02,936 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-23 12:31:02,937 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-23 12:31:02,937 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-23 12:31:02,937 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-23 12:31:02,937 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-23 12:31:02,937 - DEBUG: Compression agreed: none
+2018-04-23 12:31:02,940 - DEBUG: Got server p (2048 bits)
+2018-04-23 12:31:03,353 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-23 12:31:03,354 - DEBUG: Switch to new keys ...
+2018-04-23 12:31:03,355 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-23 12:31:03,357 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-23 12:31:03,394 - DEBUG: userauth is OK
+2018-04-23 12:31:03,468 - INFO: Authentication (publickey) successful!
+2018-04-23 12:31:03,468 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-23 12:31:03,469 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-23 12:31:03,476 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-23 12:31:03,477 - DEBUG: Secsh channel 0 opened.
+2018-04-23 12:31:03,479 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-23 12:31:03,508 - DEBUG: [chan 0] EOF received (0)
+2018-04-23 12:31:03,509 - INFO: cp_ssh: Disconnect from host 
+2018-04-23 12:31:03,581 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:31:03,587 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:31:03,613 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:49:19,603 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-23 12:49:19,608 - DEBUG: starting thread (client mode): 0xb24abd68
+2018-04-23 12:49:19,608 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-23 12:49:19,631 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-23 12:49:19,632 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-23 12:49:19,633 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-23 12:49:19,634 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-23 12:49:19,634 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-23 12:49:19,634 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-23 12:49:19,634 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-23 12:49:19,635 - DEBUG: Compression agreed: none
+2018-04-23 12:49:19,676 - DEBUG: Got server p (2048 bits)
+2018-04-23 12:49:19,870 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-23 12:49:19,871 - DEBUG: Switch to new keys ...
+2018-04-23 12:49:19,874 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-23 12:49:19,875 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-23 12:49:19,912 - DEBUG: userauth is OK
+2018-04-23 12:49:19,942 - INFO: Authentication (publickey) successful!
+2018-04-23 12:49:19,943 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-23 12:49:19,944 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-23 12:49:19,951 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-23 12:49:19,952 - DEBUG: Secsh channel 0 opened.
+2018-04-23 12:49:19,955 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-23 12:49:19,961 - DEBUG: [chan 0] EOF received (0)
+2018-04-23 12:49:19,962 - INFO: cp_ssh: Disconnect from host 
+2018-04-23 12:49:20,021 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:49:20,030 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:49:20,039 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:49:24,479 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:49:24,484 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:49:24,508 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:50:35,698 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:50:35,701 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:50:35,710 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:50:52,405 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:50:52,411 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:50:52,441 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:51:41,186 - INFO: cp_ssh: Trying to connect to host taurus.hrsk.tu-dresden.de via ssh
+2018-04-23 12:51:41,189 - DEBUG: starting thread (client mode): 0xb0910f60
+2018-04-23 12:51:41,189 - DEBUG: Local version/idstring: SSH-2.0-paramiko_2.4.0
+2018-04-23 12:51:41,196 - DEBUG: Remote version/idstring: SSH-2.0-OpenSSH_5.3
+2018-04-23 12:51:41,197 - INFO: Connected (version 2.0, client OpenSSH_5.3)
+2018-04-23 12:51:41,199 - DEBUG: kex algos:['diffie-hellman-group-exchange-sha256', 'diffie-hellman-group-exchange-sha1', 'diffie-hellman-group14-sha1', 'diffie-hellman-group1-sha1'] server key:['ssh-rsa', 'ssh-dss'] client encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] server encrypt:['aes256-ctr', 'aes192-ctr', 'aes128-ctr'] client mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] server mac:['hmac-md5', 'hmac-sha1', 'umac-64@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-ripemd160', 'hmac-ripemd160@openssh.com', 'hmac-sha1-96', 'hmac-md5-96'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+2018-04-23 12:51:41,199 - DEBUG: Kex agreed: diffie-hellman-group-exchange-sha256
+2018-04-23 12:51:41,200 - DEBUG: HostKey agreed: ssh-rsa
+2018-04-23 12:51:41,200 - DEBUG: Cipher agreed: aes128-ctr
+2018-04-23 12:51:41,200 - DEBUG: MAC agreed: hmac-sha2-256
+2018-04-23 12:51:41,200 - DEBUG: Compression agreed: none
+2018-04-23 12:51:41,203 - DEBUG: Got server p (2048 bits)
+2018-04-23 12:51:41,331 - DEBUG: kex engine KexGexSHA256 specified hash_algo <built-in function openssl_sha256>
+2018-04-23 12:51:41,331 - DEBUG: Switch to new keys ...
+2018-04-23 12:51:41,332 - DEBUG: Adding ssh-rsa host key for taurus.hrsk.tu-dresden.de: b'cfc8729c7bca88ec1f52e2f4c0ba9eb0'
+2018-04-23 12:51:41,333 - DEBUG: Trying discovered key b'0fee3682f8f5cc4b5d58024aa8c3ad07' in /home/s1428123/.ssh/tinker_uni
+2018-04-23 12:51:41,372 - DEBUG: userauth is OK
+2018-04-23 12:51:41,407 - INFO: Authentication (publickey) successful!
+2018-04-23 12:51:41,407 - INFO: cp_ssh: Connection to host taurus.hrsk.tu-dresden.de established.
+2018-04-23 12:51:41,408 - DEBUG: [chan 0] Max packet in: 32768 bytes
+2018-04-23 12:51:41,416 - DEBUG: [chan 0] Max packet out: 32768 bytes
+2018-04-23 12:51:41,416 - DEBUG: Secsh channel 0 opened.
+2018-04-23 12:51:41,419 - DEBUG: [chan 0] Sesch channel 0 request ok
+2018-04-23 12:51:41,429 - DEBUG: [chan 0] EOF received (0)
+2018-04-23 12:51:41,429 - INFO: cp_ssh: Disconnect from host 
+2018-04-23 12:51:41,516 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:51:41,522 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:51:41,530 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:52:03,147 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:52:03,154 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:52:03,158 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:52:05,494 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:52:05,501 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:52:05,514 - WARNING: Not Found: /site_media/css/style.css
+2018-04-23 12:52:08,296 - WARNING: Not Found: /media/css/base.css
+2018-04-23 12:52:08,318 - WARNING: Not Found: /media/css/login.css
+2018-04-23 12:52:08,324 - WARNING: Not Found: /site_media/css/style.css

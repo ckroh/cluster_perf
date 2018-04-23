@@ -29,13 +29,23 @@ def cluster_detail(request, cluster_id):
 			else:
 				ssh_status = 'SUCCESS'
 				stdin, stdout, stderr = cluster.connection.exec_command('[ ! -d '+cluster.remote_path+' ] && echo \'Directory not found\'')
-				remote_path_status = stdout
-				
+				remote_path_status = None
+				for line in stdout:
+					remote_path_status = line.strip('\n')
+				if remote_path_status == None:
+					remote_path_status = "EXISTS"
+			
+				cluster.disconnect()	
 		except:
 			ssh_status = 'FAILED'
+		
+		if not os.path.exists(cluster.local_path):
+			local_path_status = "DOES NOT EXIST"
+		else:
+			local_path_status = "EXISTS"
 			
 		
-		return render(request,'overview/cluster_check.html',{'cluster': cluster, 'ssh_status': ssh_status})
+		return render(request,'overview/cluster_check.html',{'cluster': cluster, 'ssh_status': ssh_status, 'remote_path_status': remote_path_status, 'local_path_status': local_path_status})
 #		
 	else:
 		testform = TestClusterSettings(initial={'cluster': cluster_id})

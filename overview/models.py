@@ -9,6 +9,8 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.conf import settings
 
+
+from shutil import copyfile
 import logging
 import os
 from crontab import CronTab
@@ -158,7 +160,7 @@ class Batchsystem(models.Model):
 			if 'NumNodes' in parameters['bs']:
 				#TODO
 				res += " --nodes=" + parameters['bs']['NumNodes'] 
-			#TODO SLURM does not need partition defined
+
 			res += " -p " + parameters['bs']['partition']
 			if 'TimeLimit' in parameters['bs']:
 				res += " --time=" + parameters['bs']['TimeLimit']
@@ -616,26 +618,55 @@ class Test(models.Model):
 	needs_building = models.NullBooleanField()
 
 
-	def getPath(self, area=None):
+	def getPath(self, area=None, cluster=None, local=True):
 		if self.id is not 0:
-			#TODO
-			if area == 'results':
-				return settings.getPath('tests') + '/' + self.name +'/results' 
-			elif area == 'configs':
-				return settings.getPath('tests') + '/' + self.name +'/configs' 
-			elif area == 'scripts':
-				return settings.getPath('tests') + '/' + self.name +'/scripts' 
-			elif area == 'output':
-				return settings.getPath('tests') + '/' + self.name +'/output' 
-			elif area == 'error':
-				return settings.getPath('tests') + '/' + self.name +'/error' 
-			else:			
-				return settings.getPath('tests') + '/' + self.name 
+			if cluster == None:
+				#TODO
+				if area == 'results':
+					return settings.getPath('tests') + '/' + self.name +'/results' 
+				elif area == 'configs':
+					return settings.getPath('tests') + '/' + self.name +'/configs' 
+				elif area == 'scripts':
+					return settings.getPath('tests') + '/' + self.name +'/scripts' 
+				elif area == 'output':
+					return settings.getPath('tests') + '/' + self.name +'/output' 
+				elif area == 'error':
+					return settings.getPath('tests') + '/' + self.name +'/error' 
+				else:			
+					return settings.getPath('tests') + '/' + self.name 
+			else:
+				if local is True:
+					if area == 'results':
+						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/results' 
+					elif area == 'configs':
+						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/configs' 
+					elif area == 'scripts':
+						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/scripts' 
+					elif area == 'output':
+						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/output' 
+					elif area == 'error':
+						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/error' 
+					else:			
+						return settings.getPath('tests', cluster.local_path) + '/' + self.name 
+				else:
+					if area == 'results':
+						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/results' 
+					elif area == 'configs':
+						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/configs' 
+					elif area == 'scripts':
+						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/scripts' 
+					elif area == 'output':
+						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/output' 
+					elif area == 'error':
+						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/error' 
+					else:			
+						return settings.getPath('tests', cluster.remote_path) + '/' + self.name 
 		else:
 			return None
 
-	def createTestDirectory(self):
+	def createTestDirectory(self, cluster):
 		directories = [None, 'results','configs','output','scripts']
+		#create local directories
 		for d in directories:
 			if self.getPath(d) is not None:
 				if not os.path.exists(self.getPath(d)):
@@ -644,22 +675,33 @@ class Test(models.Model):
 					except OSError as e:
 						logging.error("Test: Can not create directories for test %s",e)
 						raise
+		#create directories in locally mounted cluster fs 
+		for d in directories:
+			if self.getPath(d, cluster) is not None:
+				if not os.path.exists(self.getPath(d, cluster)):
+					try:
+						os.makedirs(self.getPath(d, cluster))					
+					except OSError as e:
+						logging.error("Test: Can not create directories for test %s",e)
+						raise
 				
 						
 	def generateRunScript(self, cluster):
 		#ensure that directories exist
-		self.createTestDirectory()
+		self.createTestDirectory(cluster)
 		
-		filename = self.getPath('scripts') + '/run_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
+		local_filename = self.getPath('scripts') + '/run_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
+		remote_filename = self.getPath('scripts', cluster, False) + '/run_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
 		
 		try:
-			with io.FileIO(filename, "w") as file:
+			with io.FileIO(local_filename, "w") as file:
 				if cluster.batchsystem.header is not None and len(cluster.batchsystem.header) > 0:
 					file.write(cluster.batchsystem.header)
 
 				if self.run_script is not None and len(self.run_script) > 0:
 					file.write("\n\n#-----TEST RUN SCRIPT------\n")	
 					file.write("\n\n")								
+					#TODO rewrite as curl call to REST API
 					file.write("ssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} ${CPERF_DIR}/bin/cp_result.sh --hasStarted=$TestResultId\n")
 					file.write(self.run_script)
 								
@@ -671,7 +713,18 @@ class Test(models.Model):
 					file.write("\n\n#-----BATCHSYSTEM FOOTER-----\n")
 					file.write(cluster.batchsystem.footer)
 				file.close()
-				return filename
+				#copy run script into cluster fs
+				try:
+					copyfile(local_filename, self.getPath('scripts', cluster))
+				# eg. src and dest are the same file
+				except shutil.Error as e:
+					logging.error('Test: could not copy build script to cluster: %s' % e)
+					return None
+				# eg. source or destination doesn't exist
+				except IOError as e:
+					logging.error('Test: could not copy build script to cluster: %s' % e.strerror)
+					return None
+				return remote_filename
 		except IOError as e:
 			logging.error("Test: could not create run script in " + self.getPath('scripts') + filename+ "\n" + e)
 			return None
@@ -679,12 +732,13 @@ class Test(models.Model):
 							
 	def generateBuildScript(self, cluster):
 		#ensure that directories exist
-		self.createTestDirectory()
+		self.createTestDirectory(cluster)
 		
-		filename = self.getPath('scripts') + '/build_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
+		local_filename = self.getPath('scripts') + '/build_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
+		remote_filename = self.getPath('scripts', cluster, False) + '/build_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
 		
 		try:
-			with io.FileIO(filename, "w") as file:
+			with io.FileIO(local_filename, "w") as file:
 				if cluster.batchsystem.header is not None and len(cluster.batchsystem.header) > 0:
 					file.write(cluster.batchsystem.header)
 				file.write("\n\n")		
@@ -704,7 +758,18 @@ class Test(models.Model):
 					file.write("\n\n#-----BATCHSYSTEM FOOTER-----\n")
 					file.write(cluster.batchsystem.footer)
 				file.close()
-				return filename
+				#copy run script into cluster fs
+				try:
+					copyfile(local_filename, self.getPath('scripts', cluster))
+				# eg. src and dest are the same file
+				except shutil.Error as e:
+					logging.error('Test: could not copy build script to cluster: %s' % e)
+					return None
+				# eg. source or destination doesn't exist
+				except IOError as e:
+					logging.error('Test: could not copy build script to cluster: %s' % e.strerror)
+					return None
+				return remote_filename
 		except:
 			logging.error("Test: could not create build script in " + self.getPath('scripts'))
 			return None

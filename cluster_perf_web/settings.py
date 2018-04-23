@@ -132,9 +132,9 @@ CP_HOST = '172.22.1.104'
 CP_PATH = '/home/s1428123/cluster_perf'
 
 
-def getPath(area=None):
-	
-	root = CP_PATH
+def getPath(area=None, root=None):
+	if root==None:
+		root = CP_PATH
 	
 	if area is "tests":
 		return root + "/tests"

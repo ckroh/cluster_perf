@@ -8,9 +8,9 @@
 
 Cluster:
     <table>
-    <tr><th>Name</th><th>Batchsystem</th><th>Login-Node</th><th># Nodes</th></tr>
+    <tr><th>Name</th><th>Batchsystem</th><th>Login-Node</th><th>Lokaler Pfad</th><th>Remote Pfad</th><th># Nodes</th></tr>
     
-        <tr><td><a href="{% url 'cluster_detail' cluster.id %}">{{ cluster.name }}</a></td><td>{{ cluster.batchsystem }}</td><td>{{ cluster.login_node }}</td><td>0</td></tr>
+        <tr><td><a href="{% url 'cluster_detail' cluster.id %}">{{ cluster.name }}</a></td><td>{{ cluster.batchsystem }}</td><td>{{ cluster.login_node }}</td><td>{{ cluster.local_path }}</td><td>{{ cluster.remote_path }}</td><td>0</td></tr>
 
     </table>
 <hr/>
