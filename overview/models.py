@@ -9,8 +9,9 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.conf import settings
 
+from django.utils import timezone
 
-from shutil import copyfile
+from shutil import copyfile,copytree
 import logging
 import os
 from crontab import CronTab
@@ -25,8 +26,30 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn import manifold
 import paramiko
+import io
+import sys
+import re
+
+
+
 
 logging.basicConfig(filename=os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))+'/cluster_perf.log',level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+
+
+def getPath(area=None, root=None):
+	if root==None:
+		root = settings.CP_PATH
+	
+	if area is "tests":
+		return root + "/tests"
+	if area is "core":
+		return root + "/core"
+	if area is "lib":
+		return root + "/core/lib"
+	if area is "include":
+		return root + "/core/include"
+	else:
+		return root
 
 class Batchsystem(models.Model):
 	name = models.CharField(max_length=100)
@@ -118,7 +141,7 @@ class Batchsystem(models.Model):
 		if self.name=="PBS":
 			ret = "-v "
 			res=""
-			for v in parameters['env'].iterkeys():
+			for v in parameters['env']:
 				if len(res)>0:
 					res = res +','
 				res = res + v + "=" + str(parameters['env'][v])
@@ -126,7 +149,7 @@ class Batchsystem(models.Model):
 			
 		elif self.name=="SLURM":
 			ret = "--export="
-			for v in parameters['env'].iterkeys():
+			for v in parameters['env']:
 				if len(ret)>9:
 					ret += ','
 				ret += v + "=" + str(parameters['env'][v])
@@ -155,7 +178,7 @@ class Batchsystem(models.Model):
 			res += " -J " + parameters['bs']['job_name']
 			res += " --ntasks-per-node=1"
 #			res += " -N " + str(parameters['bs']['node_count'])
-			res += " -w --nodelist=" + parameters['bs']['nodes']
+			res += " --nodelist=" + parameters['bs']['nodes']
 			
 			if 'NumNodes' in parameters['bs']:
 				#TODO
@@ -171,7 +194,6 @@ class Batchsystem(models.Model):
 	
 	def getParameters(self, cluster, nodes, test, test_config, tcv, result):
 		parameters={'env':{},'bs':{}}
-		parameters.update(cluster.parameter)
 		if test_config is not None:
 			parameters.update(test_config.parameter) 
 		if result is not None:
@@ -180,27 +202,28 @@ class Batchsystem(models.Model):
 		if len(nodes) is 1:
 			parameters['env']['NodeId'] = nodes[0].id
 			
-		parameters['env']['CPERF_DIR'] = cfg.getPath(None)
-		parameters['env']['CPERF_HOST'] = cfg.cfg.get('general','cp_host')
-		parameters['env']['CPERF_USER'] = cfg.cfg.get('general','os_user')
-		parameters['env']['CPERF_SSHKEY'] = cfg.cfg.get('general','ssh_keyfile')
-		parameters['env']['TestDir'] = test.getPath()
+		parameters['env']['CPERF_DIR'] = getPath(None)
+		parameters['env']['CPERF_HOST'] = settings.CP_HOST
+		parameters['env']['CPERF_USER'] = settings.OS_USER
+		parameters['env']['CPERF_SSHKEY'] = settings.SSH_KEYFILE
+		parameters['env']['TestDir'] = test.getPath('',cluster,False)
 		parameters['env']['TestID'] = test.id
 		parameters['env']['TestConfigID'] = test_config.id
 		parameters['env']['TestConfigVersionHash'] = tcv.hash
-		parameters['env']['TestResultsDir'] = test.getPath('results')
-		parameters['env']['TestOutputDir'] = test.getPath('output')
-		parameters['env']['TestScriptsDir'] = test.getPath('scripts')
+		parameters['env']['TestConfigVersionId'] = tcv.id
+		parameters['env']['TestResultsDir'] = test.getPath('results',cluster,False)
+		parameters['env']['TestOutputDir'] = test.getPath('output',cluster,False)
+		parameters['env']['TestScriptsDir'] = test.getPath('scripts',cluster,False)
 		parameters['env']['TestConfigHash'] = tcv.hash
 		if test_config is not None and test_config.needs_configfile:
-			parameters['env']['Configfile'] = test_config.getConfigfileName(test,tcv)
+			parameters['env']['Configfile'] = test.getPath('scripts',cluster,False)+test_config.getConfigfileName(test,tcv)
 		if result.type == "run":
 			parameters['bs']['job_name'] = "RUN_"+test.name+"_" + test_config.name 
 		elif result.type == "build":
 			parameters['bs']['job_name'] = "BUILD_"+test.name+"_" + test_config.name 
 			
-		parameters['bs']['output'] = test.getPath('output')
-		parameters['bs']['error'] = test.getPath('error')
+		parameters['bs']['output'] = test.getPath('output',cluster,False)
+		parameters['bs']['error'] = test.getPath('error',cluster,False)
 		if result.type == "run" and 'TimeLimitRun' in parameters['bs']:
 			parameters['bs']['TimeLimit'] = parameters['bs']['TimeLimitRun']
 		elif result.type == "build" and 'TimeLimitBuild' in parameters['bs']:
@@ -253,7 +276,7 @@ class Batchsystem(models.Model):
 					
 		elif self.name=="SLURM":
 			try:
-				logging.info("executing command: " +'sbatch' + self.getBatchsystemVariables(parameters) +" "+ self.getEnvironmentVariables(parameters) + " " + script_path)
+				logging.info("executing command: %s%s %s %s", 'sbatch', self.getBatchsystemVariables(parameters), self.getEnvironmentVariables(parameters), script_path)
 				stdin, stdout, stderr = cluster.connection.exec_command('sbatch' + self.getBatchsystemVariables(parameters) +" "+ self.getEnvironmentVariables(parameters) + " " + script_path)
 				jobid = 0
 				outp = ""
@@ -419,7 +442,7 @@ class Node(models.Model):
 			logging.error("test does not exist!")
 			return
 	
-		filename = test.getPath('results') + "/" + str(self.cluster.id) + "_" + str(self.id) + ".log"
+		filename = test.getPath('results', cluster) + "/" + str(self.cluster.id) + "_" + str(self.id) + ".log"
 		dmi = ""
 		try:
 			file = open(filename, "r")
@@ -448,7 +471,7 @@ class Node(models.Model):
 			logging.error("partition does not exist!")
 			nt = None
 	
-		if fnt is None:
+		if nt is None:
 			nt = NodeType(
 				name = self.name,
 				hw_info = self.hw_info,
@@ -456,9 +479,9 @@ class Node(models.Model):
 			)
 			nt.save()
 			
-			fnt = nt
+			
 	
-		self.node_type = fnt
+		self.node_type = nt
 		self.save()		
     
 	class Meta:
@@ -501,7 +524,7 @@ class Result(models.Model):
 	result_detail = JSONField()
 	result = models.FloatField(blank=True, null=True)
 	#test_config_version_hash = models.CharField(max_length=150, blank=True, null=True)
-	test_config_version_hash = models.ForeignKey('TestConfigHistory', models.DO_NOTHING, blank=True, null=True)
+	test_config_version = models.ForeignKey('TestConfigHistory', models.DO_NOTHING, blank=True, null=True)
 	submit = models.DateTimeField(blank=True, null=True)
 	type = models.CharField(max_length=20, blank=True, null=True)
 	nodes = models.ManyToManyField(
@@ -562,7 +585,7 @@ class TestConfig(models.Model):
 	test = models.ForeignKey('Test', models.DO_NOTHING)
 	config = models.TextField(blank=True, null=True)
 	parameter = JSONField()
-	configfile_ending = models.CharField(max_length=10, blank=True, null=True)
+	configfile_extension = models.CharField(max_length=10, blank=True, null=True)
 	needs_configfile = models.NullBooleanField()
 	edited = models.DateTimeField(auto_now_add=True)
 	node_types = models.ManyToManyField(
@@ -575,6 +598,52 @@ class TestConfig(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'test_config'
+		
+	def compare(self, other_config):
+		diff_config = self.getDiff(self.config, other_config.config)
+		diff_parameter = self.getDiff(json.dumps(self.parameter), json.dumps(other_config.parameter))
+		diff_ratio_config = self.getPercDiff(self.config, other_config.config)
+		diff_ratio_parameter = self.getPercDiff(json.dumps(self.parameter), json.dumps(other_config.parameter))
+		return {'config': {'diff': ''.join(list(diff_config)), 'ratio': diff_ratio_config}, 'parameter': {'diff': ''.join(list(diff_parameter)), 'ratio': diff_ratio_parameter}}
+		
+	def getConfigfileName(self, test, tcv):
+		filename =  '/'+ test.name + "_" + self.name + "_" + tcv.hash + self.configfile_extension
+		return filename
+		
+	def generateConfigfile(self, test, tcv, cluster):	
+	#ensure that directories exist
+		test.createTestDirectory(cluster)
+		filename =  '/'+ test.name + "_" + self.name+ "_" + tcv.hash + self.configfile_extension
+		
+		local_filename = test.getPath('scripts') + filename
+		remote_filename = test.getPath('scripts', cluster, True) + filename
+		remote_local_filename = test.getPath('scripts', cluster, False) + filename
+		
+		try:
+			file = open(local_filename, "w+")
+			#with io.FileIO(test.getPath('configs') + filename, "w") as file:
+			file.write(self.config)
+			file.close()
+			logging.info("TestConfig: created configfile for config '%s' in file '%s'",self.id,test.getPath('configs') + filename)
+		except IOError as e:
+			logging.error("TestConfig: could not create configfile " + filename + " \nin " + test.getPath('configs')+"\n"+e)
+			return None
+		#copy run script into cluster fs
+		try:
+			copyfile(local_filename, remote_filename)
+		
+		# eg. source or destination doesn't exist
+		except IOError as e:
+			logging.error('TestConfig: could not copy configfile to cluster: %s' % e.strerror)
+			return None
+		return filename
+
+	def getConfigByVersion(self,tcv):
+		
+		
+		self.config=''.join(difflib.restore(tcv.config_diff,1))
+		self.parameter=json.loads(''.join(difflib.restore(tcv.parameter_diff,1)))
+
 
 
 class TestConfigHistory(models.Model):
@@ -623,49 +692,55 @@ class Test(models.Model):
 			if cluster == None:
 				#TODO
 				if area == 'results':
-					return settings.getPath('tests') + '/' + self.name +'/results' 
+					return getPath('tests') + '/' + self.name +'/results' 
 				elif area == 'configs':
-					return settings.getPath('tests') + '/' + self.name +'/configs' 
+					return getPath('tests') + '/' + self.name +'/configs' 
 				elif area == 'scripts':
-					return settings.getPath('tests') + '/' + self.name +'/scripts' 
+					return getPath('tests') + '/' + self.name +'/scripts' 
 				elif area == 'output':
-					return settings.getPath('tests') + '/' + self.name +'/output' 
+					return getPath('tests') + '/' + self.name +'/output' 
 				elif area == 'error':
-					return settings.getPath('tests') + '/' + self.name +'/error' 
+					return getPath('tests') + '/' + self.name +'/error' 
+				elif area == 'sources':
+					return getPath('tests') + '/' + self.name +'/sources' 
 				else:			
-					return settings.getPath('tests') + '/' + self.name 
+					return getPath('tests') + '/' + self.name 
 			else:
 				if local is True:
 					if area == 'results':
-						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/results' 
+						return getPath('tests', cluster.local_path) + '/' + self.name +'/results' 
 					elif area == 'configs':
-						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/configs' 
+						return getPath('tests', cluster.local_path) + '/' + self.name +'/configs' 
 					elif area == 'scripts':
-						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/scripts' 
+						return getPath('tests', cluster.local_path) + '/' + self.name +'/scripts' 
 					elif area == 'output':
-						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/output' 
+						return getPath('tests', cluster.local_path) + '/' + self.name +'/output' 
 					elif area == 'error':
-						return settings.getPath('tests', cluster.local_path) + '/' + self.name +'/error' 
+						return getPath('tests', cluster.local_path) + '/' + self.name +'/error'  
+					elif area == 'sources':
+						return getPath('tests', cluster.local_path) + '/' + self.name +'/sources' 
 					else:			
-						return settings.getPath('tests', cluster.local_path) + '/' + self.name 
+						return getPath('tests', cluster.local_path) + '/' + self.name 
 				else:
 					if area == 'results':
-						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/results' 
+						return getPath('tests', cluster.remote_path) + '/' + self.name +'/results' 
 					elif area == 'configs':
-						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/configs' 
+						return getPath('tests', cluster.remote_path) + '/' + self.name +'/configs' 
 					elif area == 'scripts':
-						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/scripts' 
+						return getPath('tests', cluster.remote_path) + '/' + self.name +'/scripts' 
 					elif area == 'output':
-						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/output' 
+						return getPath('tests', cluster.remote_path) + '/' + self.name +'/output' 
 					elif area == 'error':
-						return settings.getPath('tests', cluster.remote_path) + '/' + self.name +'/error' 
+						return getPath('tests', cluster.remote_path) + '/' + self.name +'/error'
+					elif area == 'sources':
+						return getPath('tests', cluster.remote_path) + '/' + self.name +'/sources' 
 					else:			
-						return settings.getPath('tests', cluster.remote_path) + '/' + self.name 
+						return getPath('tests', cluster.remote_path) + '/' + self.name 
 		else:
 			return None
 
-	def createTestDirectory(self, cluster):
-		directories = [None, 'results','configs','output','scripts']
+	def createTestDirectory(self, cluster=None):
+		directories = [None, 'results','configs','output','scripts','sources']
 		#create local directories
 		for d in directories:
 			if self.getPath(d) is not None:
@@ -675,115 +750,129 @@ class Test(models.Model):
 					except OSError as e:
 						logging.error("Test: Can not create directories for test %s",e)
 						raise
-		#create directories in locally mounted cluster fs 
-		for d in directories:
-			if self.getPath(d, cluster) is not None:
-				if not os.path.exists(self.getPath(d, cluster)):
-					try:
-						os.makedirs(self.getPath(d, cluster))					
-					except OSError as e:
-						logging.error("Test: Can not create directories for test %s",e)
-						raise
-				
+		if cluster != None and not os.path.exists(self.getPath('', cluster)):
+			try:
+				copytree(self.getPath(''), self.getPath('', cluster))
+			except IOError as e:
+				logging.error("Test: could not copy sources dir '%s' to cluster '%s': %s",self.getPath(''), self.getPath('', cluster),  e)
 						
 	def generateRunScript(self, cluster):
 		#ensure that directories exist
 		self.createTestDirectory(cluster)
 		
 		local_filename = self.getPath('scripts') + '/run_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
-		remote_filename = self.getPath('scripts', cluster, False) + '/run_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
-		
+		remote_filename = self.getPath('scripts', cluster, True) + '/run_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
+		remote_local_filename = self.getPath('scripts', cluster, False) + '/run_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
 		try:
-			with io.FileIO(local_filename, "w") as file:
-				if cluster.batchsystem.header is not None and len(cluster.batchsystem.header) > 0:
-					file.write(cluster.batchsystem.header)
+			file = open(local_filename, "w+")
+			if cluster.batchsystem.header is not None and len(cluster.batchsystem.header) > 0:
+				file.write(cluster.batchsystem.header)
 
-				if self.run_script is not None and len(self.run_script) > 0:
-					file.write("\n\n#-----TEST RUN SCRIPT------\n")	
-					file.write("\n\n")								
-					#TODO rewrite as curl call to REST API
-					file.write("ssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} ${CPERF_DIR}/bin/cp_result.sh --hasStarted=$TestResultId\n")
-					file.write(self.run_script)
-								
-				if self.analysis_script is not None and len(self.analysis_script) > 0:
-					file.write("\n\n#-----TEST ANALYSIS SCRIPT------\n")	
-					file.write(self.analysis_script)
-					file.write("\nssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} $CPERF_DIR/bin/cp_result.sh --writeResult=$TestResultId --result=$Result --details=$ResultDetails\n")
-				if cluster.batchsystem.footer is not None and len(cluster.batchsystem.footer) > 0:
-					file.write("\n\n#-----BATCHSYSTEM FOOTER-----\n")
-					file.write(cluster.batchsystem.footer)
-				file.close()
-				#copy run script into cluster fs
-				try:
-					copyfile(local_filename, self.getPath('scripts', cluster))
-				# eg. src and dest are the same file
-				except shutil.Error as e:
-					logging.error('Test: could not copy build script to cluster: %s' % e)
-					return None
-				# eg. source or destination doesn't exist
-				except IOError as e:
-					logging.error('Test: could not copy build script to cluster: %s' % e.strerror)
-					return None
-				return remote_filename
+			if self.run_script is not None and len(self.run_script) > 0:
+				file.write("\n\n#-----TEST RUN SCRIPT------\n")	
+				file.write("\n\n")						
+#					file.write("ssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} ${CPERF_DIR}/bin/cp_result.sh --hasStarted=$TestResultId\n")
+				file.write("curl --header \"Content-Type: application/json\" --request POST http://${CPERF_HOST}:8000/api/results/$TestResultId/hasStarted/\n")
+				file.write(self.run_script)
+							
+			if self.analysis_script is not None and len(self.analysis_script) > 0:
+				file.write("\n\n#-----TEST ANALYSIS SCRIPT------\n")	
+				file.write(self.analysis_script)
+				#file.write("\nssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} $CPERF_DIR/bin/cp_result.sh --writeResult=$TestResultId --result=$Result --details=$ResultDetails\n")
+				file.write("\ncurl --header \"Content-Type: application/json\" --request POST --data '{\"result\":\"$Result\",\"result_detail\":\"$ResultDetails\"}' http://${CPERF_HOST}:8000/api/results/$TestResultId/writeResult/\n")
+			if cluster.batchsystem.footer is not None and len(cluster.batchsystem.footer) > 0:
+				file.write("\n\n#-----BATCHSYSTEM FOOTER-----\n")
+				file.write(cluster.batchsystem.footer)
+			file.close()
+			
 		except IOError as e:
 			logging.error("Test: could not create run script in " + self.getPath('scripts') + filename+ "\n" + e)
 			return None
+		#copy run script into cluster fs
+		try:
+			copyfile(local_filename, remote_filename)
+			# eg. src and dest are the same file
+#				except shutil.Error as e:
+#					logging.error('Test: could not copy build script to cluster: %s' % e)
+#					return None
+		# eg. source or destination doesn't exist
+		except IOError as e:
+			logging.error('Test: could not copy build script to cluster: %s' % e.strerror)
+			return None
+		return remote_local_filename
 
 							
 	def generateBuildScript(self, cluster):
+		logging.debug("Test - generateBuildScript: cluster: %s", cluster.name)
 		#ensure that directories exist
 		self.createTestDirectory(cluster)
 		
 		local_filename = self.getPath('scripts') + '/build_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
-		remote_filename = self.getPath('scripts', cluster, False) + '/build_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
+		remote_filename = self.getPath('scripts', cluster, True) + '/build_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
+		remote_local_filename = self.getPath('scripts', cluster, False) + '/build_' + cluster.name + '_' + cluster.batchsystem.name +'.sh'
 		
+		logging.debug("Test - generateBuildScript: local_path: %s", local_filename)
+		logging.debug("Test - generateBuildScript: remote_path for cluster %s: %s", cluster.name, remote_filename)
 		try:
-			with io.FileIO(local_filename, "w") as file:
-				if cluster.batchsystem.header is not None and len(cluster.batchsystem.header) > 0:
-					file.write(cluster.batchsystem.header)
-				file.write("\n\n")		
-				file.write("ssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} ${CPERF_DIR}/bin/cp_result.sh --hasStarted=$TestResultId\n")	
-				if self.build_script is not None and len(self.build_script) > 0:
-					file.write("\n\n#-----TEST BUILD SCRIPT------\n")	
-					file.write(self.build_script)								
-				file.write("\n\ncd $CPERF_DIR\n")							
-				file.write('if [ "$built" = true ] ; then\n')		
-				file.write("\tssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} << EOF ${CPERF_DIR}/bin/cp_result.sh --built=$TestConfigHash\n")
-				file.write('\tssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} $CPERF_DIR/bin/cp_result.sh --writeResult=$TestResultId --result=1.0 --details={"build": "success"}\n')
-				file.write("\t${CPERF_DIR}/bin/cp_test.sh --$TestType=$TestID --test_config=$TestConfigID --nodes=$RUN_NODES --hash=$TestConfigHash\nEOF\n")
-				file.write("else\n")
-				file.write('\tssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} $CPERF_DIR/bin/cp_result.sh --writeResult=$TestResultId --result=-1.0 --details={"build": "failed"}\n')
-				file.write("fi")
-				if cluster.batchsystem.footer is not None and len(cluster.batchsystem.footer) > 0:
-					file.write("\n\n#-----BATCHSYSTEM FOOTER-----\n")
-					file.write(cluster.batchsystem.footer)
-				file.close()
-				#copy run script into cluster fs
-				try:
-					copyfile(local_filename, self.getPath('scripts', cluster))
-				# eg. src and dest are the same file
-				except shutil.Error as e:
-					logging.error('Test: could not copy build script to cluster: %s' % e)
-					return None
-				# eg. source or destination doesn't exist
-				except IOError as e:
-					logging.error('Test: could not copy build script to cluster: %s' % e.strerror)
-					return None
-				return remote_filename
-		except:
-			logging.error("Test: could not create build script in " + self.getPath('scripts'))
+			file = open(local_filename, "w+")
+#			with io.FileIO(local_filename, "w") as file:
+			if cluster.batchsystem.header is not None and len(cluster.batchsystem.header) > 0:
+				file.write(cluster.batchsystem.header)
+			file.write("\n\n")		
+			#file.write("ssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} ${CPERF_DIR}/bin/cp_result.sh --hasStarted=$TestResultId\n")	
+			
+			file.write("curl --header \"Content-Type: application/json\" --request POST http://${CPERF_HOST}:8000/api/results/$TestResultId/hasStarted/\n")
+			if self.build_script is not None and len(self.build_script) > 0:
+				file.write("\n\n#-----TEST BUILD SCRIPT------\n")	
+				file.write(self.build_script)								
+			file.write("\n\ncd $CPERF_DIR\n")							
+			file.write('if [ "$built" = true ] ; then\n')		
+			
+#			file.write("\tssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} << EOF ${CPERF_DIR}/bin/cp_result.sh --built=$TestConfigHash\n")
+			file.write("\tcurl --header \"Content-Type: application/json\" --request POST http://${CPERF_HOST}:8000/api/test_config_histories/$TestConfigVersionId/wasBuilt/\n")
+			#file.write('\tssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} $CPERF_DIR/bin/cp_result.sh --writeResult=$TestResultId --result=1.0 --details={"build": "success"}\n')
+			file.write("\tcurl --header \"Content-Type: application/json\" --request POST --data '{\"result\":\"1.0\",\"result_detail\":\"{\"build\": \"success\"}\"}' http://${CPERF_HOST}:8000/api/results/$TestResultId/writeResult/\n")
+			
+			#file.write("\t${CPERF_DIR}/bin/cp_test.sh --$TestType=$TestID --test_config=$TestConfigID --nodes=$RUN_NODES --hash=$TestConfigHash\nEOF\n")
+			file.write("\tcurl --header \"Content-Type: application/json\" --request POST --data '{\"test_config\":\"$TestConfigId\",\"nodes\":\"$RUN_NODES\",\"tcv_hash\":\"$TestConfigHash\"}' http://${CPERF_HOST}:8000/api/tests/$TestID/start/\nEOF\n")
+			file.write("else\n")
+			#file.write('\tssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} $CPERF_DIR/bin/cp_result.sh --writeResult=$TestResultId --result=-1.0 --details={"build": "failed"}\n')
+			file.write("\tcurl --header \"Content-Type: application/json\" --request POST --data '{\"result\":\"-1.0\",\"result_detail\":\"{\"build\": \"failed\"}\"}' http://${CPERF_HOST}:8000/api/results/$TestResultId/writeResult/\n")
+			if cluster.batchsystem.footer is not None and len(cluster.batchsystem.footer) > 0:
+				file.write("\n\n#-----BATCHSYSTEM FOOTER-----\n")
+				file.write(cluster.batchsystem.footer)
+			file.close()
+		except IOError as e:
+			logging.error("Test: IOError could not create build script in '%s': %s", self.getPath('scripts'), e)
 			return None
+		except:
+			logging.error("Test: could not create build script in '%s': %s", local_filename, sys.exc_info()[0])
+			return None
+			
+		#copy run script into cluster fs
+		try:
+			copyfile(local_filename, remote_filename)
+#			self.getPath('scripts', cluster))
+		# eg. src and dest are the same file
+#		except shutil.Error as e:
+#			logging.error('Test: could not copy build script to cluster: %s' % e)
+#			return None
+		# eg. source or destination doesn't exist
+		except IOError as e:
+			logging.error('Test: could not copy build script to cluster: %s: %s -> %s', e.strerror, local_filename, remote_filename)
+			return None
+		return remote_local_filename
 
 	def buildTest(self, test_config, nodes, tcv, test_type):
 		if test_type == 'TEST':
 			test_type_start="startTest"
-			#node=nodes[0]
+			node=nodes[0]
 			run_nodes=[]
 			for n in nodes:
 				run_nodes.append(n.id)
 		elif test_type == 'TEST_ARRAY':
 			test_type_start="startTestArray"
-			#node = nodes[0][0]
+			node = nodes[0][0]
 			run_nodes=[]
 			for t in nodes:
 				temp = []
@@ -800,26 +889,25 @@ class Test(models.Model):
 		
 
 		if test_config is not None:
-			node_types = test_config.getAllNodeTypeIDs()
-			
-			if len(node_types)>0 and node.node_type_id not in node_types:
-				logging.error("Test: Node of wrong type '%s' assinged to test '%s' with config '%s'",node.node_type_id, self.name, test_config.name)
-				return		
-
+			try:
+				test_nt = test_config.node_types.get(id=node.node_type.id)
+			except Entry.DoesNotExist:
+				logging.error("Test: Node of wrong type '%s' assinged to test '%s' with config '%s'",node.node_type.id, self.name, test_config.name)
+				return
+		
+	
 		buildscript_file = self.generateBuildScript(cluster)
+		if buildscript_file==None:
+			return
+			
+			
+		res = Result(type="build", test_config = test_config, test_config_version = tcv)
 		
-		res = Result()
-		res.type="build"
-		res.test_config_id = test_config.id
-		res.test_config_version_hash = tcv.hash
 		
-		res.insertDB(db.dbcursor)
+		res.save()
+		res_node=ResultNode(node=node, result=res, node_type=node.node_type)
+		res_node.save()
 		
-		rtn = Result2Node()
-		rtn.result_id = res.id
-		rtn.node_id = node.id
-		rtn.node_type_id=node.node_type_id
-		rtn.insertDB(db.dbcursor)
 		
 		test_config.parameter['env']['RUN_NODES']=str("[{}]".format(",".join(map(repr, run_nodes))))
 		test_config.parameter['bs']['num_nodes']=1
@@ -830,40 +918,43 @@ class Test(models.Model):
 		
 		cluster.disconnect()
 		if res.job_id is not None:
+			res.submit=timezone.now()
 			res.save()
 			
 		else:
 			res.result = -1
 			res.result_detail['error']="Could not start build due to batchsystem"
-			res.setResult(db.dbcursor)
+			res.save()
 			logging.error("Test: Could not start build due to batchsystem")
 
 	def startTest(self, test_config, nodes, tcv_hash=None):
 		if test_config==None:
-			test_config=TestConfig()
-			test_config.getDefaultConfig(db.dbcursor, self.id)
+			test_config = TestConfig.objects.filter(test=self).order_by('-id')[0]
 		if test_config.id==0:
 			logging.error("Test: could not get default test config for test '%s'", self.id)
 			return 
 			
-		tcv=TestConfigVersion()
 		if tcv_hash==None:
-			tcv.getCurrentVersion(db.dbcursor, test_config.id)
+			tcv = TestConfigHistory.objects.filter(test_config=test_config).order_by('-edited')[0]
 		else:
-			tcv.getVersionByHash(db.dbcursor, tcv_hash)
-			test_config.getConfigByVersion(tcv.id)
+			tcv = TestConfigHistory.objects.get(hash=tcv_hash)
+			test_config = tcv.test_config
 			
 		if tcv.id==0:
 			logging.error("Test - startTest: Invalid test config version supplied, hash: '%s'", tcv_hash)
 			return
-			
+		cluster = nodes[0].cluster
+		
+		if test_config.needs_configfile == True:
+			if test_config.generateConfigfile(self, tcv, cluster)==None:
+				logging.error("Test: could not create configfile")	
+		
 		if self.needs_building is True and tcv.was_built is False:
 			logging.info("Building Test %s for Config %s before running", self.id, test_config.id)
 			
 			self.buildTest(test_config, nodes, tcv, 'TEST')
 			return
 		
-		cluster = nodes[0].cluster
 		
 		cluster.connect()
 		if cluster.connection is None:
@@ -873,30 +964,26 @@ class Test(models.Model):
 		
 		#nodes must be of the same node type as defined in test config -> check
 		if test_config is not None:
-			node_types = test_config.getAllNodeTypeIDs()
 			for n in nodes: 
-				
-				if len(node_types)>0 and n.node_type_id not in node_types:
-					logging.error("Test: Node of wrong type '%s' assinged to test '%s' with config '%s'",n.node_type_id, self.name, test_config.name)
+				if len(test_config.node_types)>0 and n.node_type not in test_config.node_types:
+					logging.error("Test: Node of wrong type '%s' assinged to test '%s' with config '%s'",n.node_type.id, self.name, test_config.name)
 					return		
 		
 		run_path = self.generateRunScript(cluster)
 		
-		res = Result()
-		res.type="run"
-		res.test_config = test_config
-		res.test_config_version_hash = tcv.hash
-		
+		res = Result(type="run", test_config = test_config, test_config_version = tcv)
 		res.save()
 		
-		for n in nodes:
-			res.nodes.add(n)
+		for n in nodes:	
+			res_node=ResultNode(node=n, result=res, node_type=n.node_type)
+			res_node.save()
 			
 		res.job_id = cluster.batchsystem.submit(cluster,run_path, nodes, self, test_config, tcv, res)
 		
 		cluster.disconnect()
 		
 		if res.job_id is not None:
+			res.submit=timezone.now()
 			res.save()
 			
 		else:
@@ -907,21 +994,18 @@ class Test(models.Model):
 		
 
 	def startTestArray(self, test_config, nodes, tcv_hash=None):
-		if db.dbcursor is None:
-			db.dbConnect()
+		
 		if test_config==None:
-			test_config=TestConfig()
-			test_config.getDefaultConfig(db.dbcursor, self.id)
+			test_config = TestConfig.objects.filter(test=self).order_by('-id')[0]
 		if test_config.id==0:
 			logging.error("Test: could not get default test config for test '%s'", self.id)
 			return 
 			
-		tcv=TestConfigVersion()
 		if tcv_hash==None:
-			tcv.getCurrentVersion(db.dbcursor, test_config.id)
+			tcv = TestConfigHistory.objects.filter(test_config=test_config).order_by('-edited')[0]
 		else:
-			tcv.getVersionByHash(db.dbcursor, tcv_hash)
-			test_config.getConfigByVersion(tcv.id)
+			tcv = TestConfigHistory.objects.get(hash=tcv_hash)
+			test_config = tcv.test_config
 			
 		if tcv.id==0:
 			logging.error("Test - startTest: Invalid test config version supplied, hash: '%s'", tcv_hash)
@@ -944,7 +1028,7 @@ class Test(models.Model):
 		db_table = 'tests'
         
         
-        
+        #TODO port to django
 class Schedule(models.Model):
 	id = models.BigAutoField(primary_key=True)
 	begin = models.DateTimeField()
