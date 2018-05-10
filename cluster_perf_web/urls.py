@@ -3,6 +3,8 @@
 
 """
 from overview.models import *
+from overview.tasks import *
+
 
 from django.contrib import admin
 from django.urls import include,path
@@ -164,7 +166,8 @@ class TestViewSet(viewsets.ModelViewSet):
 			tcv_hash=None
 			
 #		RUN TEST:
-		test.startTest(test_config, nodes, tcv_hash)
+		task_start_test.delay(test.id, request.data)
+#		test.startTest(test_config, nodes, tcv_hash)
 		return Response('OK')
 		
 		

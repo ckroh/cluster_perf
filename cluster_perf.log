@@ -7137,3 +7137,152 @@ AttributeError: 'TestConfig' object has no attribute 'getPath'
 2018-05-09 14:44:02,046 - INFO: Batchsystem: Submited job with id 15944468
 2018-05-09 14:44:02,047 - INFO: cp_ssh: Disconnect from host 
 2018-05-09 14:44:02,147 - DEBUG: EOF in transport thread
+2018-05-09 15:16:25,300 - DEBUG: Successfuly imported extension module "markdown.extensions.toc".
+2018-05-09 15:16:25,301 - DEBUG: Successfully loaded extension "markdown.extensions.toc.TocExtension".
+2018-05-10 14:20:37,641 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:20:37,659 - ERROR: Internal Server Error: /api/tests/2/start/
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/viewsets.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 483, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 443, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 480, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/s1428123/cluster_perf_web/cluster_perf_web/urls.py", line 168, in start
+    task_start_test.delay(test, test_config, nodes, tcv_hash)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/task.py", line 413, in delay
+    return self.apply_async(args, kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/task.py", line 518, in apply_async
+    check_arguments(*(args or ()), **(kwargs or {}))
+TypeError: task_start_test() takes 4 positional arguments but 5 were given
+2018-05-10 14:21:20,011 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:21:20,103 - ERROR: Internal Server Error: /api/tests/2/start/
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/serialization.py", line 50, in _reraise_errors
+    yield
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/serialization.py", line 221, in dumps
+    payload = encoder(data)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/utils/json.py", line 72, in dumps
+    **dict(default_kwargs, **kwargs))
+  File "/usr/lib/python3.5/json/__init__.py", line 237, in dumps
+    **kw).encode(obj)
+  File "/usr/lib/python3.5/json/encoder.py", line 198, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.5/json/encoder.py", line 256, in iterencode
+    return _iterencode(o, 0)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/utils/json.py", line 62, in default
+    return super(JSONEncoder, self).default(o)
+  File "/usr/lib/python3.5/json/encoder.py", line 179, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+TypeError: <Test: SPEC_OMP2012> is not JSON serializable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/viewsets.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 483, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 443, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 480, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/s1428123/cluster_perf_web/cluster_perf_web/urls.py", line 168, in start
+    task_start_test.delay(test, test_config, nodes, tcv_hash)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/task.py", line 413, in delay
+    return self.apply_async(args, kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/task.py", line 536, in apply_async
+    **options
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/base.py", line 737, in send_task
+    amqp.send_task_message(P, name, message, **options)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/amqp.py", line 554, in send_task_message
+    **properties
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/messaging.py", line 169, in publish
+    compression, headers)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/messaging.py", line 252, in _prepare
+    body) = dumps(body, serializer=serializer)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/serialization.py", line 221, in dumps
+    payload = encoder(data)
+  File "/usr/lib/python3.5/contextlib.py", line 77, in __exit__
+    self.gen.throw(type, value, traceback)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/serialization.py", line 54, in _reraise_errors
+    reraise(wrapper, wrapper(exc), sys.exc_info()[2])
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/vine/five.py", line 178, in reraise
+    raise value.with_traceback(tb)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/serialization.py", line 50, in _reraise_errors
+    yield
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/serialization.py", line 221, in dumps
+    payload = encoder(data)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/utils/json.py", line 72, in dumps
+    **dict(default_kwargs, **kwargs))
+  File "/usr/lib/python3.5/json/__init__.py", line 237, in dumps
+    **kw).encode(obj)
+  File "/usr/lib/python3.5/json/encoder.py", line 198, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.5/json/encoder.py", line 256, in iterencode
+    return _iterencode(o, 0)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/kombu/utils/json.py", line 62, in default
+    return super(JSONEncoder, self).default(o)
+  File "/usr/lib/python3.5/json/encoder.py", line 179, in default
+    raise TypeError(repr(o) + " is not JSON serializable")
+kombu.exceptions.EncodeError: <Test: SPEC_OMP2012> is not JSON serializable
+2018-05-10 14:26:57,326 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:32:25,293 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:35:53,048 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:35:53,062 - ERROR: Internal Server Error: /api/tests/2/start/
+Traceback (most recent call last):
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/exception.py", line 35, in inner
+    response = get_response(request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 128, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/viewsets.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 483, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 443, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/rest_framework/views.py", line 480, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/s1428123/cluster_perf_web/cluster_perf_web/urls.py", line 169, in start
+    task_start_test.delay(test.id, request.data)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/task.py", line 413, in delay
+    return self.apply_async(args, kwargs)
+  File "/home/s1428123/cp_django/lib/python3.5/site-packages/celery/app/task.py", line 518, in apply_async
+    check_arguments(*(args or ()), **(kwargs or {}))
+TypeError: task_start_test() missing 1 required positional argument: 'request_data'
+2018-05-10 14:36:09,659 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:38:17,788 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:46:19,508 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:48:53,258 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:49:59,847 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 14:52:29,419 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 15:10:41,618 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 15:11:11,344 - DEBUG: Successfuly imported extension module "markdown.extensions.toc".
+2018-05-10 15:11:11,344 - DEBUG: Successfully loaded extension "markdown.extensions.toc.TocExtension".
+2018-05-10 15:11:56,904 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 15:17:35,938 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 15:18:11,357 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 15:19:16,787 - DEBUG: REST API: startTest nodes defined [6832]
+2018-05-10 15:19:45,712 - DEBUG: REST API: startTest nodes defined [6832]
