@@ -33,22 +33,26 @@
     <details>
 	<summary>Version history:</summary>
 	<table>
-		<tr><th>Hash</th><th>Date</th><th>Config Diff</th><th>Parameter Diff</th><th>Was built</th></tr>
+		<tr class="border_bottom"><th>Hash</th><th>Date</th><th>Parameter</th><th>Was built</th></tr>
 		 {% for t in testconfigversions %}
-		    <tr><td>{{ t.hash }}</td><td>{{ t.edited }}</td><td><details>{{ t.config_diff|linebreaks }}</details></td><td>{{ t.parameter_diff|linebreaks }}</td></tr>
+		    <tr class="border_bottom"><td>{{ t.hash }}</td><td>{{ t.edited }}</td><td>
+		    {% for pv in t.parameter_values.all %}
+		    	{{ pv.parameter.type }}: {{ pv.parameter.name }} = {{ pv.value }}</br>
+		    {% endfor %}
+		    </td><td>{{ t.was_built }}</td></tr>
 		{% endfor %}
 	</table>
     </details>
     
     
-    <section>
-    <h1>Run Test</h1>
-    <form action="/run-test/" method="post">
-    {% csrf_token %}
-    {{ runform }}
-    <input type="submit" value="Submit" />
-</form>
-</section>
+<!--    <section>-->
+<!--    <h1>Run Test</h1>-->
+<!--    <form action="/run-test/" method="post">-->
+<!--    {% csrf_token %}-->
+<!--    {{ runform }}-->
+<!--    <input type="submit" value="Submit" />-->
+<!--</form>-->
+<!--</section>-->
 
     </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 """cluster_perf_web URL Configuration
-
+	defining rest api viewsets, serializers and routers
 
 """
 from overview.models import *
@@ -8,10 +8,12 @@ from overview.tasks import *
 
 from django.contrib import admin
 from django.urls import include,path
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers, serializers, viewsets, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
+
 from django.utils import timezone
 
 import json
@@ -46,10 +48,11 @@ class NodeSerializer(serializers.HyperlinkedModelSerializer):
     cluster = models.ForeignKey(Cluster,  on_delete=models.DO_NOTHING)
     partition = models.ForeignKey(Partition,  on_delete=models.DO_NOTHING)
     node_type = models.ForeignKey(NodeType,  on_delete=models.DO_NOTHING)
-
+	
     class Meta:
         model = Node
         fields = ('id','name','cluster','hw_info','hw_info_update','partition','node_type')
+
 
 
 class PartitionSerializer(serializers.HyperlinkedModelSerializer):
@@ -75,14 +78,14 @@ class TestConfigSerializer(serializers.HyperlinkedModelSerializer):
     test = models.ForeignKey(Test,  on_delete=models.DO_NOTHING)
     class Meta:
         model = TestConfig
-        fields = ('id','name','test','config','parameter','configfile_extension','needs_configfile','edited','node_types')
+        fields = ('id','name','test','config','configfile_extension','needs_configfile','edited','node_types')
 
         
 class TestConfigHistorySerializer(serializers.HyperlinkedModelSerializer):
     test_config = models.ForeignKey(TestConfig, on_delete=models.DO_NOTHING)
     class Meta:
         model = TestConfigHistory
-        fields = ('id','test_config','config_diff','parameter_diff','hash','edited','was_built')
+        fields = ('id','test_config','hash','edited','was_built')
 
         
 class TestSerializer(serializers.HyperlinkedModelSerializer):
@@ -100,6 +103,16 @@ class ClusterViewSet(viewsets.ModelViewSet):
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
+    
+    def get_queryset(self):
+	    queryset = Node.objects.all()
+	    node_type = self.request.query_params.get('node_type', None)
+	    partition = self.request.query_params.get('partition', None)
+	    if node_type is not None:
+		    queryset = queryset.filter(node_type__id=node_type)
+	    if partition is not None:
+		    queryset = queryset.filter(partition__id=partition)
+	    return queryset
 
 class NodeTypeViewSet(viewsets.ModelViewSet):
     queryset = NodeType.objects.all()
@@ -110,22 +123,44 @@ class PartitionViewSet(viewsets.ModelViewSet):
 class ResultViewSet(viewsets.ModelViewSet):
 	queryset = Result.objects.all()
 	serializer_class = ResultSerializer
-	# http POST http://172.22.1.104:8000/api/results/<id>/hasStarted/ 
-	@action(detail=True, methods=['post'])
+	# http -a system:manual_3034 POST http://172.22.1.104:8000/api/results/<id>/hasStarted/ 
+	@action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
 	def hasStarted(self, request, *args, **kwargs):
 		result = self.get_object()
 		result.start = timezone.now()
 		result.save()
+		return Response('OK')
+	# http -a system:manual_3034 POST http://172.22.1.104:8000/api/results/<id>/setNode/ 
+	@action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+	def setNode(self, request, *args, **kwargs):
+		result = self.get_object()
+		try:
+			n=Node.objects.get(name=request.data['node_name'])
+		except Node.DoesNotExist:
+			logging.error("Node does not exist: '%s'", request.data['node_name']) 
+			return Response('OK')
+			
+		res_node=ResultNode(node=n, result=result, node_type=n.node_type)
+		res_node.save()
+		return Response('OK')
 		
-	# http POST http://172.22.1.104:8000/api/results/<id>/writeResult/ 
-	@action(detail=True, methods=['post'])
+	# http -a system:manual_3034 POST http://172.22.1.104:8000/api/results/<id>/writeResult/ 
+	@action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
 	def writeResult(self, request, *args, **kwargs):
 		result = self.get_object()
 		if 'result' in request.data:
-			result.result=request.data['result']
+			logging.info("result from request: '%s'", request.data['result'])
+			try:
+				res = float(request.data['result'])
+			except:
+				res = -1.0
+
+			result.result=round(res,2)
 		if 'result_detail' in request.data:
-			result.result_detail=json.loads(request.data['result_detail'])
+			result.result_detail=request.data['result_detail']
+		result.end = timezone.now()
 		result.save()
+		return Response('OK')
     	
 class TestConfigViewSet(viewsets.ModelViewSet):
     queryset = TestConfig.objects.all()
@@ -135,44 +170,40 @@ class TestConfigHistoryViewSet(viewsets.ModelViewSet):
 	queryset = TestConfigHistory.objects.all()
 	serializer_class = TestConfigHistorySerializer
 	
-	# http POST http://172.22.1.104:8000/api/test_config_histories/<id>/wasBuilt/ 
-	@action(detail=True, methods=['post'])
+	# http -a system:manual_3034 POST http://172.22.1.104:8000/api/test_config_histories/<id>/wasBuilt/ 
+	@action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
 	def wasBuilt(self, request, *args, **kwargs):
 		tcv = self.get_object()
 		tcv.was_built = True
 		tcv.save()
+		return Response('OK')
 
 class TestViewSet(viewsets.ModelViewSet):
 	queryset = Test.objects.all()
 	serializer_class = TestSerializer
 	
-	# http POST http://172.22.1.104:8000/api/tests/2/start/ test_config=13 nodes=[6832] tcv_hash=
-	@action(detail=True, methods=['post'])
-	def start(self, request, *args, **kwargs):
-		test = self.get_object()
-		test_config = TestConfig.objects.get(id=request.data['test_config'])
-		nodes = []
-		snodes = json.loads(request.data['nodes'])
 
-		logging.debug("REST API: startTest nodes defined %s" % snodes) 
-		for n in snodes:
-			nodes.append(Node.objects.get(id=n))
-		if len(nodes)==0:
-			logging.error("REST API: startTest no nodes defined %s" % request.data) 
-		
-		if 'tcv_hash' in request.data:
-			tcv_hash=request.data['tcv_hash']
-		else:
-			tcv_hash=None
-			
-#		RUN TEST:
+	
+	# http -a system:manual_3034 POST http://172.22.1.104:8000/api/tests/2/start/ test_config=13 nodes=[6832] parameter=[] hash=[]
+	@action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+	def start(self, request, *args, **kwargs):
+		logging.debug("REST API: startTest task in celery") 
+		test = self.get_object()
+#		RUN TEST through celery:
 		task_start_test.delay(test.id, request.data)
-#		test.startTest(test_config, nodes, tcv_hash)
+		return Response('OK')
+	
+	# http -a system:manual_3034 POST http://172.22.1.104:8000/api/tests/2/startArray/ test_config=13 nodes=[6832] parameter=[] hash=
+	@action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+	def startArray(self, request, *args, **kwargs):
+		logging.debug("REST API: startTest task in celery") 
+		test = self.get_object()
+#		RUN TEST:
+		task_start_test_array.delay(test.id, request.data)
 		return Response('OK')
 		
 		
 		
-# Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'results', ResultViewSet)
 router.register(r'test_config_histories', TestConfigHistoryViewSet)

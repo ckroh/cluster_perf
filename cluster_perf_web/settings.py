@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,9 @@ TEMPLATES = [
         },
     },
 ]
+
+STATIC_URL = '/static/'
+
 
 WSGI_APPLICATION = 'cluster_perf_web.wsgi.application'
 

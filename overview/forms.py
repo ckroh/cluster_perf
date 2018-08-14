@@ -8,6 +8,14 @@ class RunTestForm(forms.Form):
 	
 	nodes = forms.ModelMultipleChoiceField(queryset=Node.objects.all(), label='Run on Node(s)')
 	
+	def __init__(self, *args, **kwargs):
+		test_config_id = kwargs.pop('test_config_id', None)
+		super(RunTestForm, self).__init__(*args, **kwargs)
+
+		if test_config_id:
+			self.fields['test_config_hash'].queryset = TestConfigHistory.objects.filter(test_config__id=test_config_id)
+
+	
 	
 class RunTestMultiNodeForm(forms.Form):
 	test_config = forms.ModelChoiceField(queryset=TestConfig.objects.all(), widget=forms.HiddenInput())

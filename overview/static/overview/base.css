@@ -1,0 +1,23 @@
+#top{
+display: block;
+height: 30px;
+}
+
+#top li {
+	float: left;
+	width: auto;
+	padding-right: 10px;
+	padding-left: 10px;
+	border-right: 1px solid;
+	height: 25px;
+	list-style-type: none;
+}
+.border_bottom td{
+	border-bottom: #000 1px solid;
+	border-right: #000 1px solid;
+}
+
+.border_bottom th{
+	border-bottom: #000 1px solid;
+	border-right: #000 1px solid;
+}

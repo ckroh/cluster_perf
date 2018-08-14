@@ -1,0 +1,168 @@
+	{% extends "overview/base.html" %}
+	
+	
+{% load overview_extras %}
+{% load static %}
+{% block extrahead %}
+<script src="http://www.chartjs.org/dist/2.7.2/Chart.bundle.js" type="text/javascript"></script>
+<script src="http://www.chartjs.org/samples/latest/utils.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+<script src="{% static 'overview/chartjs-plugin-annotation.min.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+$( document ).ready(function() {
+
+
+	var datapoints = [{% for l in gaussy %}"{{ l }}",{% endfor %}];
+	var datapoints2 = [{% for l in y %}"{{ l }}",{% endfor %}];
+
+    var config = {
+		type: 'line',
+		data: {
+			labels: [{% for l in x %}"{{ l }}",{% endfor %}],
+			datasets: [{
+				label: 'Gauss Fit',
+				data: datapoints,
+				borderColor: window.chartColors.blue,
+				backgroundColor: 'rgba(0, 0, 0, 0)',
+				fill: false,
+			},
+			{
+				label: 'Number of Results',
+				data: datapoints2,
+				borderColor: window.chartColors.red,
+				backgroundColor: 'rgba(0, 0, 0, 0)',
+				fill: false,
+				showLine: false,
+			}				
+			]
+		},
+		options: {
+			annotation: {
+				annotations: [
+				  {
+				    type: "line",
+				    mode: "vertical",
+				    scaleID: "x-axis-0",
+				    value: "{{ lim }}",
+				    borderColor: "red",
+				    label: {
+				      content: "90% Limit",
+				      enabled: true,
+				      position: "top"
+				    }
+				  }
+				]
+			  },
+			responsive: true,
+			title: {
+				display: true,
+				text: 'Result distribution for Node Type'
+			},
+			tooltips: {
+				mode: 'index'
+			},
+			scales: {
+				xAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						
+						labelString: 'Normalized Result'
+					}
+				}],
+				yAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Number of Results'
+					},
+					ticks: {
+						suggestedMin: 0,
+						suggestedMax: {{ maxy }},
+					}
+				}]
+			}
+		}
+	};
+
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var myLineChart =new Chart(ctx, config);
+});
+
+</script>
+{% endblock %}
+
+
+{% block title %}Tests -  Cluster Perf{% endblock %}
+
+{% block home %}current{% endblock %}
+
+
+{% block real_content %}
+
+Analysis:    
+ <form action="" method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+    <div>
+<!--    {% for l in res %}{{ l.norm_result }}: {{ l.the_count }}</br>{% endfor %}-->
+    
+    </div>
+    Sigma: {{ sigma }}, Mean: {{ mean }}
+    <canvas id="myChart" width="500" height="300"></canvas>
+    
+    
+<!--<div>-->
+<!--{% for tcv in test_config_versions %}-->
+<!--<section>-->
+<!--<header>Test Config Version: {{ tcv.hash }}</header> -->
+<!--Was built: {{ tcv.was_built }} <br/>-->
+<!--Edited: {{ tcv.edited }} <br/>-->
+<!--Parameter:-->
+<!--{% for pv in tcv.parameter_values.all %}-->
+<!--{{ pv.parameter.type }}: {{ pv.parameter.name }}={{ pv.value }}<br/>-->
+
+<!--{% endfor %}-->
+
+<!--</section>-->
+<!--{% endfor %}-->
+<!--</div>-->
+
+
+    <div>
+    Result List:
+    	<table>
+    	<tr><th>#ID</th><th>Date</th><th>Nodes</th><th>Result</th><th>Result Normalized</th><th>Result Detail</th></tr>
+    	{% for r in resultdisplay %}
+    		<tr {% if r.norm_result < lim %} style="background-color:red;"{% endif %} >
+    		<td>{{ r.id }}</td>
+    		<td>{{ r.end }}</td>
+    		<td>{% for n in r.nodes.all %}{{ n.name }}</br>{% endfor %}</td>
+    		<td>{{ r.result }}</td>
+    		<td>{{ r.norm_result }}</td>
+    		<td> <details>{{ r.result_detail }}</details></td>
+    		</tr>
+    	{% endfor %}
+    	
+    	<div class="pagination">
+    <span class="step-links">
+        {% if resultdisplay.has_previous %}
+            <a href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
+            <a href="?{% url_replace request 'page' resultdisplay.previous_page_number %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ resultdisplay.number }} of {{ resultdisplay.paginator.num_pages }}.
+        </span>
+
+        {% if resultdisplay.has_next %}
+            <a href="?{% url_replace request 'page' resultdisplay.next_page_number %}">next</a>
+            <a href="?{% url_replace request 'page' resultdisplay.paginator.num_pages %}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+{% endblock %}

@@ -11,6 +11,8 @@ urlpatterns = [
     path('cluster/<int:cluster_id>/node/<int:node_id>', views.node_detail, name='node_detail'),
     path('cluster/<int:cluster_id>/node_type/<int:node_type_id>', views.node_type_detail, name='node_type_detail'),
     path('cluster/<int:cluster_id>/partition/<int:partition_id>', views.partition_detail, name='partition_detail'),
+    path('analysis/test', views.analysis_test, name='analysis_test'),
+    path('analysis/node', views.analysis_node, name='analysis_node'),
 #    path('<int:cluster_id>/nodes', views.node_list, name='node_list'),
 ]
 
