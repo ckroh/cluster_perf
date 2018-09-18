@@ -1,0 +1,58 @@
+	
+	{% extends "overview/base.html" %}
+{% load overview_extras %}
+{% block title %}Node Detail -  Cluster Perf{% endblock %}
+
+{% block home %}current{% endblock %}
+
+
+{% block real_content %}
+Node {{ node.name }}:</br>
+<table>
+<tr><th>ID: </th><td>{{ node.id }}</td></tr>
+<tr><th>Name: </th><td>{{ node.name }}</td></tr>
+<tr><th>Cluster: </th><td>{{ node.cluster.name }}</td></tr>
+<tr><th>Partition: </th><td>{{ node.partition.name }}</td></tr>
+<tr><th>Node Type: </th><td>{{ node.node_type.name }}</td></tr>
+
+
+</table>
+
+
+ <div>
+    Result List:
+    	<table>
+    	<tr><th>#ID</th><th>Test Hash</th><th>Date</th><th>Nodes</th><th>Result</th><th>Result Normalized</th><th>Result Detail</th></tr>
+    	{% for r in resultdisplay %}
+    		<tr {% if r.norm_result < lim %} style="background-color:red;"{% endif %} >
+    		<td>{{ r.id }}</td>
+    		<td>{{ r.test_config_version.hash }}</td>
+    		<td>{{ r.end }}</td>
+    		<td>{% for n in r.nodes.all %}<a href="{% url 'node_detail' n.cluster.id n.id %}">{{ n.name }}</a></br>{% endfor %}</td>
+    		<td>{{ r.result }}</td>
+    		<td>{{ r.norm_result }}</td>
+    		<td> <details>{{ r.result_detail }}</details></td>
+    		</tr>
+    	{% endfor %}
+    	
+    	<div class="pagination">
+    <span class="step-links">
+        {% if resultdisplay.has_previous %}
+            <a href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
+            <a href="?{% url_replace request 'page' resultdisplay.previous_page_number %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ resultdisplay.number }} of {{ resultdisplay.paginator.num_pages }}.
+        </span>
+
+        {% if resultdisplay.has_next %}
+            <a href="?{% url_replace request 'page' resultdisplay.next_page_number %}">next</a>
+            <a href="?{% url_replace request 'page' resultdisplay.paginator.num_pages %}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+
+{% endblock %}
+

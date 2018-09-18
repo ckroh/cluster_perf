@@ -6,14 +6,18 @@ from overview.models import *
 
 
 
-
+class ResultNodeInline(admin.StackedInline):
+	model = Result.nodes.through
+#	filter_horizontal = ('parameter_values',)
+	extra = 0
 
 
 class ResultAdmin(admin.ModelAdmin):
-	fieldsets = [(None, 	{'fields': ['start','end','test_config','test_config_version','result','norm_result','result_detail', 'type', 'submit']}),]
+	fieldsets = [(None, 	{'fields': ['start','end','test_config','test_config_version','result','norm_result','result_detail', 'type', 'submit','job_id']}),]
 	list_filter = ['start','end', 'submit', 'type','test_config','test_config_version']
-	list_display = ('start','end','type','result','norm_result')
+	list_display = ('id','submit','start','end','type','result','norm_result')
 	actions = ['update_norm_result']
+	inlines = [ResultNodeInline]
 
 	def update_norm_result(self, request, queryset):
 	#    queryset.update(status='p')

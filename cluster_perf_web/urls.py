@@ -135,6 +135,7 @@ class ResultViewSet(viewsets.ModelViewSet):
 	def setNode(self, request, *args, **kwargs):
 		result = self.get_object()
 		try:
+			logging.debug("detting node '%s' for result %s", request.data['node_name'], result.id)
 			n=Node.objects.get(name=request.data['node_name'])
 		except Node.DoesNotExist:
 			logging.error("Node does not exist: '%s'", request.data['node_name']) 
@@ -149,13 +150,16 @@ class ResultViewSet(viewsets.ModelViewSet):
 	def writeResult(self, request, *args, **kwargs):
 		result = self.get_object()
 		if 'result' in request.data:
-			logging.info("result from request: '%s'", request.data['result'])
-			try:
-				res = float(request.data['result'])
-			except:
-				res = -1.0
+			logging.debug("result ID %s from request: '%s'", result.id, request.data['result'])
+			if request.data['result'] is not '':
+				try:
+					result.result = float(request.data['result'])
+				except:
+					result.result = -1.0
+			else:
+				result.result = -1.0
+				
 
-			result.result=round(res,2)
 		if 'result_detail' in request.data:
 			result.result_detail=request.data['result_detail']
 		result.end = timezone.now()

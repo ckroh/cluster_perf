@@ -1,7 +1,7 @@
 	{% extends "overview/base.html" %}
 	
     {% load static %}
-	
+	{% load overview_extras %}
 {% block extrahead %}
 <!--<script src="http://www.chartjs.org/dist/2.7.2/Chart.bundle.js" type="text/javascript"></script>-->
 <!--<script src="http://www.chartjs.org/samples/latest/utils.js"></script>-->
@@ -10,9 +10,17 @@
 <script src="{% static 'overview/dataTool.min.js' %}"></script>
 <script src="{% static 'overview/ecStat.min.js' %}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+
+
+<script src="{% static 'overview/chart.js/node_modules/chart.js/dist/Chart.bundle.min.js' %}"></script>
+<script src="{% static 'overview/chart.js/node_modules/chart.js/samples/utils.js' %}"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+
+
+
 <script type="text/javascript">
 $( document ).ready(function() {
-var dom = document.getElementById("myChart");
+var dom = document.getElementById("testChart");
 var myChart = echarts.init(dom);
 var app = {};
 option = null;
@@ -23,9 +31,76 @@ option = {
     tooltip: {},
     legend: {
         padding: 30,
+        show: true,
+        orient: 'horizontal',
         data: [
-         {% for tcv in test_config_versions %}
-		'{{ tcv.hash }}',
+         {% for tcv, tcvv in tcvs.items %}
+		'{{ paramst|get_item:tcv }}',
+		{% endfor %}
+		]
+    },
+    radar: {
+        // shape: 'circle',
+        padding:40,
+        name: {
+            textStyle: {
+                color: '#fff',
+                backgroundColor: '#999',
+                borderRadius: 3,
+                padding: [3, 5]
+           }
+        },
+        indicator: [
+        	{% for nt in nts %}
+    		{
+				name: "{{ nt }}",
+				max: {{ max }}
+			},
+    		{% endfor %}
+        
+        ]
+    },
+    series: [{
+        name: 'Node Types',
+        type: 'radar',
+        // areaStyle: {normal: {}},
+        data : [
+        	{% for tcv, tcvv in tcvs.items %}
+        	{
+        		value: [{% for nt,ntv in tcvv.items %}{{ ntv }}, {% endfor %}],
+        		name: '{{ paramst|get_item:tcv }}',
+        		label: {
+                    normal: {
+                        show: true,
+                        formatter: function(params) {
+                            return params.value;
+                        }
+                    }
+                }
+        	},
+    		{% endfor %}
+            
+        ]
+    }]
+};;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+
+var dom = document.getElementById("benchChart");
+var benchChart = echarts.init(dom);
+var benchapp = {};
+benchoption = null;
+benchoption = {
+    title: {
+        text: 'Test Benchmark Configuration Comparison',
+    },
+    tooltip: {},
+    legend: {
+        padding: 30,
+        data: [
+         {% for tcv, tcvv in bench_tcvs.items %}
+		'{{ paramst|get_item:tcv }}',
 		{% endfor %}
 		]
     },
@@ -40,12 +115,12 @@ option = {
            }
         },
         indicator: [
-        	{% for nt, nv in nts.items %}
+        	{% for nt in nts %}
     		{
 				name: "{{ nt }}",
-				max: {{ max }}
+				max: {{ bench_max }}
 			},
-    	{% endfor %}
+    		{% endfor %}
         
         ]
     },
@@ -54,27 +129,28 @@ option = {
         type: 'radar',
         // areaStyle: {normal: {}},
         data : [
-        	{% for tcv, tcvv in tcvs.items %}
+        	{% for tcv, tcvv in bench_tcvs.items %}
         	{
-        		value: [{% for ntn, nt in tcvv.items %}{{ nt.mean }},{% endfor %}],
-        		name: '{{ tcv }}',
+        		value: [{% for nt,ntv in tcvv.items %}{{ ntv }}, {% endfor %}],
+        		name: '{{ paramst|get_item:tcv }}',
         		label: {
-                        normal: {
-                            show: true,
-                            formatter:function(params) {
-                                return params.value;
-                            }
+                    normal: {
+                        show: true,
+                        formatter: function(params) {
+                            return params.value;
                         }
                     }
+                }
         	},
     		{% endfor %}
             
         ]
     }]
 };;
-if (option && typeof option === "object") {
-    myChart.setOption(option, true);
+if (benchoption && typeof benchoption === "object") {
+    benchChart.setOption(benchoption, true);
 }
+
 
     });
 
@@ -94,21 +170,45 @@ Analysis:
         {{ filter.form.as_p }}
         <input type="submit" />
     </form>
+{% if tcvs|length > 0 %}
+
+   
+ 
+    <canvas id="testChart" width="700" height="800"></canvas>
     
-    <canvas id="myChart" width="900" height="900"></canvas>
     
-    <div>
-    {% for tcv in test_config_versions %}
-<b>Test: {{ tcv.test_config.test.name }} - {{ tcv.test_config.name }} - {{ tcv.hash }}</b>
-<details>
-Edited: {{ tcv.edited }}</br>
-Parameter:</br>
-{% for pv in tcv.parameter_values.all %}
-{{ pv.parameter.type }}: {{ pv.parameter.name }}={{ pv.value }}<br/>
-{% endfor %}
-</details>
-{% endfor %}
-    </div>
+ <form action="" method="post">
+ {% csrf_token %}
+
+        {{ filter_bench.as_table }}
+        <input type="submit" />
+    </form>
+    
+<!--{% for r in rb %}-->
+<!--	{{ r.node_types__name }} : {{ r.test_config_version__hash }} : {{ r.result_avg }} ({{ r.val }}) <br>-->
+<!--{% endfor %}-->
+   
+<canvas id="benchChart" width="900" height="900"></canvas>
+    
+<div>
+	Configfile: 
+	<details>
+	{{ test_config_versions.0.test_config.config|linebreaks }}
+	</details>
+	{% for tcv in test_config_versions %}
+	<b>Test: {{ tcv.test_config.test.name }} - {{ tcv.test_config.name }} - {{ tcv.test_config_version.hash }}</b>
+	<details>
+	Edited: {{ tcv.test_config_version.edited }}</br>
+	Parameter:</br>
+	{% for pv in tcv.test_config_version.parameter_values.all %}
+	{{ pv.parameter.type }}: {{ pv.parameter.name }}={{ pv.value }}<br/>
+	{% endfor %}
+	</details>
+	{% endfor %}
+</div>
+
+{% endif %}
+
 <!--<div>-->
 <!--{% for tcv in test_config_versions %}-->
 <!--<section>-->

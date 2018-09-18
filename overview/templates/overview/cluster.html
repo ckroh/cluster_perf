@@ -1,4 +1,5 @@
 	{% extends "overview/base.html" %}
+{% load overview_extras %}
 {% block title %}Tests -  Cluster Perf{% endblock %}
 
 {% block home %}current{% endblock %}
@@ -10,7 +11,7 @@ Cluster:
     <table>
     <tr><th>Name</th><th>Batchsystem</th><th>Login-Node</th><th>Lokaler Pfad</th><th>Remote Pfad</th><th># Nodes</th></tr>
     
-        <tr><td><a href="{% url 'cluster_detail' cluster.id %}">{{ cluster.name }}</a></td><td>{{ cluster.batchsystem }}</td><td>{{ cluster.login_node }}</td><td>{{ cluster.local_path }}</td><td>{{ cluster.remote_path }}</td><td>0</td></tr>
+        <tr><td><a href="{% url 'cluster_detail' cluster.id %}">{{ cluster.name }}</a></td><td>{{ cluster.batchsystem }}</td><td>{{ cluster.login_node }}</td><td>{{ cluster.local_path }}</td><td>{{ cluster.remote_path }}</td><td>{{ cluster.node_set.all|length }}</td></tr>
 
     </table>
 <hr/>
@@ -30,11 +31,12 @@ Cluster:
    	Partitions:
    	</summary>
     <table>
-    <tr><th>Name</th><th>Description</th></tr>
+    <tr><th>Name</th><th>Description</th><th>Node Count</th></tr>
     {% for n in partitions %}
         <tr>
         	<td>{{ n.name }}</td>
         	<td>{{ n.description }}</td>
+        	<td>{{ n.node_set.all|length }}</td>
     	</tr>
     {% endfor %}
     </table>
@@ -69,5 +71,22 @@ Cluster:
         <tr><td><a href="{% url 'node_detail' n.cluster_id n.id %}">{{ n.name }}</a></td><td>{{ n.node_type.name }}</td><td></td><td>0</td></tr>
     {% endfor %}
     </table>
+    <div class="pagination">
+    <span class="step-links">
+        {% if nodes.has_previous %}
+            <a href="?{% url_replace request 'page' 1 %}">&laquo; first</a>
+            <a href="?{% url_replace request 'page' nodes.previous_page_number %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ nodes.number }} of {{ nodes.paginator.num_pages }}.
+        </span>
+
+        {% if nodes.has_next %}
+            <a href="?{% url_replace request 'page' nodes.next_page_number %}">next</a>
+            <a href="?{% url_replace request 'page' nodes.paginator.num_pages %}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
     </details>
 {% endblock %}

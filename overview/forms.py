@@ -27,3 +27,14 @@ class RunTestMultiNodeForm(forms.Form):
 class TestClusterSettings(forms.Form):
 	cluster = forms.ModelChoiceField(queryset=Cluster.objects.all(), widget=forms.HiddenInput())
 	
+	
+	
+class ResultBenchSelectForm(forms.Form):
+	benchmark = forms.CharField(label='Select Detail to Display', widget=forms.Select(choices=[('empty','Empty')]))
+	
+	def __init__(self, *args, **kwargs):
+		choices=kwargs.pop('choices', None)
+		super(ResultBenchSelectForm, self).__init__(*args, **kwargs)
+		self.fields['benchmark']=forms.CharField(label='Select Detail to Display', widget=forms.Select(choices=choices))
+	
+

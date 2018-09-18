@@ -4,38 +4,61 @@
 {% load overview_extras %}
 {% load static %}
 {% block extrahead %}
-<script src="http://www.chartjs.org/dist/2.7.2/Chart.bundle.js" type="text/javascript"></script>
-<script src="http://www.chartjs.org/samples/latest/utils.js"></script>
+<script src="{% static 'overview/chart.js/node_modules/chart.js/dist/Chart.bundle.min.js' %}"></script>
+<script src="{% static 'overview/chart.js/node_modules/chart.js/samples/utils.js' %}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
 <script src="{% static 'overview/chartjs-plugin-annotation.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'overview/chart.js/node_modules/chart.js/src/plugins/plugin.filler.js' %}" type="text/javascript"></script>
 <script type="text/javascript">
 
 
 $( document ).ready(function() {
 
 
-	var datapoints = [{% for l in gaussy %}"{{ l }}",{% endfor %}];
-	var datapoints2 = [{% for l in y %}"{{ l }}",{% endfor %}];
+	var fit_data = [{% for l in gaussy %}{x: {{ l.0 }}, y: {{ l.1 }}},{% endfor %}];
+	var lognormalfit_data = [{% for l in lognormaldat %}{x: {{ l.0 }}, y: {{ l.1 }}},{% endfor %}];
+	var res_data = [{% for l in y %}{x: {{ l.0 }}, y: {{ l.1 }}}, {% endfor %}];
+	
 
     var config = {
 		type: 'line',
 		data: {
-			labels: [{% for l in x %}"{{ l }}",{% endfor %}],
-			datasets: [{
-				label: 'Gauss Fit',
-				data: datapoints,
-				borderColor: window.chartColors.blue,
-				backgroundColor: 'rgba(0, 0, 0, 0)',
-				fill: false,
-			},
+			datasets: [
 			{
-				label: 'Number of Results',
-				data: datapoints2,
-				borderColor: window.chartColors.red,
-				backgroundColor: 'rgba(0, 0, 0, 0)',
+				display: true,
 				fill: false,
 				showLine: false,
-			}				
+				label: 'Number of Results',
+				data: res_data,
+				borderColor: window.chartColors.red,
+				backgroundColor: 'rgba(0, 0, 0, 0)',
+				borderWidth: 2,
+				xAxisID: 'first-x-axis',
+				yAxisID: 'first-y-axis',
+			},
+			{
+				type: 'line',
+				label: 'Gauss Fit',
+				data: fit_data,
+				borderColor: window.chartColors.blue,
+				backgroundColor: 'rgba(0, 0, 0, 0)',
+				cubicInterpolationMode: 'default',
+				xAxisID: 'first-x-axis',
+				yAxisID: 'first-y-axis',
+			},
+			{
+				type: 'line',
+				label: 'Lognormal Fit',
+				data: lognormalfit_data,
+				borderColor: window.chartColors.yellow,
+				backgroundColor: 'rgba(0, 0, 0, 0)',
+				cubicInterpolationMode: 'default',
+				xAxisID: 'first-x-axis',
+				yAxisID: 'first-y-axis',
+			},
+			{fill: 'origin',
+				xAxisID: 'first-x-axis',
+				yAxisID: 'first-y-axis',}			
 			]
 		},
 		options: {
@@ -44,11 +67,23 @@ $( document ).ready(function() {
 				  {
 				    type: "line",
 				    mode: "vertical",
-				    scaleID: "x-axis-0",
-				    value: "{{ lim }}",
+				    scaleID: "first-x-axis",
+				    value: "{{ limmax }}",
 				    borderColor: "red",
 				    label: {
-				      content: "90% Limit",
+				      content: "+2.576 Sigma",
+				      enabled: true,
+				      position: "top"
+				    }
+				  },
+				   {
+				    type: "line",
+				    mode: "vertical",
+				    scaleID: "first-x-axis",
+				    value: "{{ limmin }}",
+				    borderColor: "red",
+				    label: {
+				      content: "-2.576 Sigma",
 				      enabled: true,
 				      position: "top"
 				    }
@@ -56,6 +91,8 @@ $( document ).ready(function() {
 				]
 			  },
 			responsive: true,
+			barThickness: 5, 
+			borderSkipped: 'bottom',
 			title: {
 				display: true,
 				text: 'Result distribution for Node Type'
@@ -65,14 +102,24 @@ $( document ).ready(function() {
 			},
 			scales: {
 				xAxes: [{
+					id: 'first-x-axis',
+					type: 'linear',
+					ticks: {
+						suggestedMin: {{ x.0 }},
+						suggestedMax: {% with x|last as last %}{{ last }}{% endwith %},
+		                stepSize: 0.01
+		            },
 					display: true,
 					scaleLabel: {
 						display: true,
 						
 						labelString: 'Normalized Result'
 					}
-				}],
+				},
+				],
 				yAxes: [{
+					id: 'first-y-axis',
+					type: 'linear',
 					display: true,
 					scaleLabel: {
 						display: true,
@@ -107,40 +154,26 @@ Analysis:
         {{ filter.form.as_p }}
         <input type="submit" />
     </form>
-    <div>
-<!--    {% for l in res %}{{ l.norm_result }}: {{ l.the_count }}</br>{% endfor %}-->
-    
-    </div>
-    Sigma: {{ sigma }}, Mean: {{ mean }}
+<hr/>
+   {% if gaussy %}
+   
+    Number of Results: {{ resultdisplay.paginator.count }}, Sigma: {{ sigma }}, Expected Value: {{ mu }}, Mean of Results: {{ mean }}
     <canvas id="myChart" width="500" height="300"></canvas>
     
-    
-<!--<div>-->
-<!--{% for tcv in test_config_versions %}-->
-<!--<section>-->
-<!--<header>Test Config Version: {{ tcv.hash }}</header> -->
-<!--Was built: {{ tcv.was_built }} <br/>-->
-<!--Edited: {{ tcv.edited }} <br/>-->
-<!--Parameter:-->
-<!--{% for pv in tcv.parameter_values.all %}-->
-<!--{{ pv.parameter.type }}: {{ pv.parameter.name }}={{ pv.value }}<br/>-->
+    {% else %}
+    Not able to calculate fit.
+    {% endif %}
 
-<!--{% endfor %}-->
-
-<!--</section>-->
-<!--{% endfor %}-->
-<!--</div>-->
-
-
+<hr/>
     <div>
     Result List:
     	<table>
     	<tr><th>#ID</th><th>Date</th><th>Nodes</th><th>Result</th><th>Result Normalized</th><th>Result Detail</th></tr>
     	{% for r in resultdisplay %}
-    		<tr {% if r.norm_result < lim %} style="background-color:red;"{% endif %} >
+    		<tr {% if r.norm_result < limmin or r.norm_result > limmax %} style="background-color:red;"{% endif %}>
     		<td>{{ r.id }}</td>
     		<td>{{ r.end }}</td>
-    		<td>{% for n in r.nodes.all %}{{ n.name }}</br>{% endfor %}</td>
+    		<td>{% for n in r.nodes.all %}<a href="{% url 'node_detail' n.cluster.id n.id %}">{{ n.name }}</a></br>{% endfor %}</td>
     		<td>{{ r.result }}</td>
     		<td>{{ r.norm_result }}</td>
     		<td> <details>{{ r.result_detail }}</details></td>

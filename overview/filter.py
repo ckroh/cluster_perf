@@ -10,8 +10,9 @@ from overview.models import *
 import django_filters
 	
 	
+	
+	
 class ResultFilter(django_filters.FilterSet):
-#	author = ModelChoiceFilter(queryset=Author.objects.all())
 	node_types = django_filters.ModelMultipleChoiceFilter(
 		
 		queryset=NodeType.objects.all()
@@ -26,19 +27,26 @@ class ResultFilter(django_filters.FilterSet):
 			'nodes': ['exact'],
 			'node_types': ['exact'],
 			}
+	
+
+class ResultBenchFilter(django_filters.FilterSet):	
+	result_detail = django_filters.CharFilter(name='result_detail', lookup_expr='has_key')
+
+	class Meta:
+		model = Result
+		fields = {
+			'result_detail': ['exact'],
+		}
 			
 class ResultTestFilter(django_filters.FilterSet):
-#	author = ModelChoiceFilter(queryset=Author.objects.all())
-	node_types = django_filters.ModelMultipleChoiceFilter(
-		
+	node_types = django_filters.ModelMultipleChoiceFilter(		
 		queryset=NodeType.objects.all()
 	)
 	class Meta:
 		model = Result
 		fields = {
-			'test_config__test': ['exact'],
 			'test_config': ['exact'],
-			'test_config_version': ['exact'],
-			'test_config_version__parameter_values': ['contains'],
+#			'test_config_version': ['exact'],
+#			'test_config_version__parameter_values': ['contains'],
 			'node_types': ['exact'],
 			}

@@ -71,8 +71,8 @@ TEMPLATES = [
 ]
 
 STATIC_URL = '/static/'
-
-
+DATA_UPLOAD_MAX_NUMBER_FIELDS=10000
+DATA_UPLOAD_MAX_MEMORY_SIZE=5621440
 WSGI_APPLICATION = 'cluster_perf_web.wsgi.application'
 
 

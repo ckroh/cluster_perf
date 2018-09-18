@@ -21,3 +21,10 @@ height: 30px;
 	border-bottom: #000 1px solid;
 	border-right: #000 1px solid;
 }
+
+canvas#myChart{
+
+  width:1400px !important;
+  height:900px !important;
+
+}

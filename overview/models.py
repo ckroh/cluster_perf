@@ -166,7 +166,7 @@ class Batchsystem(models.Model):
 		    for v in parameters['env']:
 			    if len(ret)>9:
 				    ret += ','
-			    ret += v + "=" + str(parameters['env'][v])
+			    ret += v + "='" + str(parameters['env'][v])+"'"
 		return ret
 
 	def getBatchsystemVariables(self, parameters):
@@ -192,7 +192,7 @@ class Batchsystem(models.Model):
 			res += " -J " + parameters['bs']['job_name']
 			res += " --ntasks-per-node=1"
 			#			res += " -N " + str(parameters['bs']['node_count'])
-			if 'TestAction' not in parameters['env']:
+			if 'TestAction' not in parameters['env'] and 'nodes' in parameters['bs']:
 				res += " --nodelist=" + parameters['bs']['nodes']
 			#DEBUG
 			res += " --nodes=1"
@@ -200,7 +200,7 @@ class Batchsystem(models.Model):
 
 			if 'NumNodes' in parameters['bs']:
 				#TODO
-				res += " --nodes=" + parameters['bs']['NumNodes'] 
+				res += " --nodes=" + str(parameters['bs']['NumNodes']) 
 			if 'NumTasks' in parameters['bs']:
 				#TODO
 				res += " --ntasks=" + parameters['bs']['NumTasks'] 
@@ -212,7 +212,7 @@ class Batchsystem(models.Model):
 				res += " -A "+ parameters['bs']['account']
 			return res
 
-	def getParameters(self, cluster, nodes, test, test_config, tcv, result, additional_parameter=None):
+	def getParameters(self, cluster, nodes, test, test_config, tcv, result, additional_parameter=None, node_type=None):
 		parameters={'env':{},'bs':{}}
 		if additional_parameter is not None:
 			parameters.update(additional_parameter) 
@@ -223,7 +223,10 @@ class Batchsystem(models.Model):
             
 		if result is not None:
 			parameters['env']['TestResultId'] = result.id
-		parameters['env']['ClusterId'] = nodes[0].cluster.id
+		if len(nodes)>0:
+			parameters['env']['ClusterId'] = nodes[0].cluster.id
+		elif node_type is not None:
+			parameters['env']['ClusterId'] = node_type.cluster.id
 		if len(nodes) is 1:
 			parameters['env']['NodeId'] = nodes[0].id
 			
@@ -266,26 +269,30 @@ class Batchsystem(models.Model):
 			
 		
 		elif self.name=="SLURM":
-			if nodes[0].partition_id != 0:
-				try:
-					p = Partition.objects.get(id=nodes[0].partition.id)
-					parameters['bs']['partition'] = p.name
-				except Partition.DoesNotExist:
-					logging.error("partition does not exist!")
-			else:
-				logging.error("Batchsystem: no SLURM partition supplied for nodes")
-			parameters['bs']['node_count'] = len(nodes)
-			parameters['bs']['nodes'] = ""
-			for n in nodes:
-				if len(parameters['bs']['nodes'])>0:
-					parameters['bs']['nodes'] += ","
-				parameters['bs']['nodes'] += n.name 
+			if len(nodes)>0:
+				if nodes[0].partition_id != 0:
+					try:
+						p = Partition.objects.get(id=nodes[0].partition.id)
+						parameters['bs']['partition'] = p.name
+					except Partition.DoesNotExist:
+						logging.error("partition does not exist!")
+				else:
+					logging.error("Batchsystem: no SLURM partition supplied for nodes")
+				parameters['bs']['node_count'] = len(nodes)
+				parameters['bs']['nodes'] = ""
+				for n in nodes:
+					if len(parameters['bs']['nodes'])>0:
+						parameters['bs']['nodes'] += ","
+					parameters['bs']['nodes'] += n.name 
+			elif node_type is not None:
+				parameters['bs']['partition'] = node_type.partition.name
+				parameters['bs']['NumNodes'] = 1
 		return parameters
 		
 		
 			
-	def submit(self, cluster, script_path, nodes, test, test_config, tcv, result, additional_parameter=None):
-		parameters = self.getParameters(cluster, nodes, test, test_config, tcv, result, additional_parameter)
+	def submit(self, cluster, script_path, nodes, test, test_config, tcv, result, additional_parameter=None, node_type=None):
+		parameters = self.getParameters(cluster, nodes, test, test_config, tcv, result, additional_parameter, node_type=node_type)
 		
 		if self.name=="PBS":
 			try:
@@ -571,14 +578,19 @@ class Result(models.Model):
 	
 	@staticmethod
 	def post_save(sender, instance=None, created=None, update_fields=None, **kwargs):
-		if update_fields is not None and  'result' in update_fields:
-			try:
-				nr = Result.objects.order_by('start').exclude(result=None, end=None).filter(test_config=instance.test_config, type=instance.type)[0]
-			except Result.DoesNotExist:
-				instance.norm_result = 1.0
+		if instance.type=='run' and instance.result is not None and (update_fields is None or 'norm_result' not in update_fields):
+			if instance.result>0:
+				try:
+					nr = Result.objects.order_by('end').exclude(result=None, end=None).filter(test_config=instance.test_config, type=instance.type)[0]
+				except Result.DoesNotExist:
+					instance.norm_result = 1.0
+				else:
+					instance.norm_result = round(nr.result/instance.result, 2)
 			else:
-				instance.norm_result = round(nr.result/instance.result, 2)
-			instance.save()
+				instance.norm_result=-1.0
+			instance.result=round(instance.result, 3)
+			instance.save(update_fields=['norm_result', 'result'])
+			
 			
 #	@property
 #	def norm_result(self):
@@ -784,17 +796,15 @@ class Test(models.Model):
 	
 	@staticmethod
 	def post_save(sender, instance=None, created=None, update_fields=None, **kwargs):
-		if update_fields is not None:
-			if 'run_script' in update_fields or ('build_script' in update_fields and instance.needs_building):
-				cs=Cluster.objects.all()
-				for c in cs:
-					instance.generateRunScript(c)
-					instance.generateBuildScript(c)
-					
-				tcvs = TestConfigHistory.objects.filter(test_config__test=instance)
-				for t in tcvs:
-					t.was_built=False
-					t.save()
+		cs=Cluster.objects.all()
+		for c in cs:
+			instance.generateRunScript(c)
+			instance.generateBuildScript(c)
+			
+		tcvs = TestConfigHistory.objects.filter(test_config__test=instance)
+		for t in tcvs:
+			t.was_built=False
+			t.save()
 			
 
 
@@ -897,7 +907,7 @@ class Test(models.Model):
 				file.write(newanalysis_script)
 				#file.write("\nssh ${CPERF_USER}@${CPERF_HOST} -i ${CPERF_SSHKEY} $CPERF_DIR/bin/cp_result.sh --writeResult=$TestResultId --result=$Result --details=$ResultDetails\n")
 				file.write('\n\nData=`printf \'{"result":"%s","result_detail":%s}\' "$Result" "$ResultDetails"`;\n')
-				file.write("echo $Data\n")
+#				file.write("echo $Data\n")
 				file.write("curl -u system:manual_3034 --header \"Content-Type: application/json\" --request POST --data $Data http://${CPERF_HOST}:8000/api/results/$TestResultId/writeResult/\n")
 			if cluster.batchsystem.footer is not None and len(cluster.batchsystem.footer) > 0:
 				file.write("\n\n#-----BATCHSYSTEM FOOTER-----\n")
@@ -988,7 +998,7 @@ class Test(models.Model):
 			return None
 		return remote_local_filename
 
-	def buildTest(self, cluster, test_config, nodes, hash, parameter, test_type):
+	def buildTest(self, cluster, test_config, nodes, hash, parameter, test_type, node_type= None):
 		if test_type == 'TEST':
 			test_type_start="startTest"
 			node=nodes[0]
@@ -1070,7 +1080,7 @@ class Test(models.Model):
 			res.save()
 			logging.error("Test: Could not start build due to batchsystem")
 
-	def startTest(self, cluster, test_config, nodes, hash, parameter=None):
+	def startTest(self, cluster, test_config, nodes, hash, parameter=None, node_type= None):
 		if test_config==None:
 			test_config = TestConfig.objects.filter(test=self).order_by('-id')[0]
 		if test_config.id==0:
@@ -1105,7 +1115,7 @@ class Test(models.Model):
 					logging.error("Test: could not create configfile")	
 			logging.info("Building Test %s for Config %s before running", self.id, test_config.id)
 			
-			self.buildTest(cluster, test_config, nodes, hash, parameter, 'TEST')
+			self.buildTest(cluster, test_config, nodes, hash, parameter, 'TEST', node_type=node_type)
 			return
 		
 		
@@ -1132,7 +1142,7 @@ class Test(models.Model):
 #			res_node=ResultNode(node=n, result=res, node_type=n.node_type)
 #			res_node.save()
 			
-		res.job_id = cluster.batchsystem.submit(cluster,run_path, nodes, self, test_config, tcv, res)
+		res.job_id = cluster.batchsystem.submit(cluster,run_path, nodes, self, test_config, tcv, res, node_type=node_type)
 		
 		
 		if res.job_id is not None:
